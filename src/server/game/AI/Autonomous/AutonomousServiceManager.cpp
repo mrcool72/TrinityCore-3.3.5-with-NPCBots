@@ -63,7 +63,7 @@ namespace AutonomousAI
 
         if (repairer && (_requestedService == "repair" || _requestedService.empty() && (perception.economyReason == "repair" || perception.economyPressure >= 80)))
         {
-            if (Creature* usable = _player->GetNPCIfCanInteractWith(repairer->GetGUID(), UNIT_NPC_FLAG_REPAIR, NPCFlags2(0)))
+            if (Creature* usable = _player->GetNPCIfCanInteractWith(repairer->GetGUID(), UNIT_NPC_FLAG_REPAIR))
             {
                 _player->DurabilityRepairAll(true, _player->GetReputationPriceDiscount(usable), false);
                 ++_repaired;
@@ -76,7 +76,7 @@ namespace AutonomousAI
 
         if (vendor && (_requestedService == "vendor" || perception.inventoryFreeSlots <= 3))
         {
-            if (Creature* usable = _player->GetNPCIfCanInteractWith(vendor->GetGUID(), UNIT_NPC_FLAG_VENDOR, NPCFlags2(0)))
+            if (Creature* usable = _player->GetNPCIfCanInteractWith(vendor->GetGUID(), UNIT_NPC_FLAG_VENDOR))
             {
                 _player->GetSession()->SendListInventory(usable->GetGUID());
                 for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
@@ -96,7 +96,7 @@ namespace AutonomousAI
 
         if (banker && (_requestedService == "bank" || perception.inventoryFreeSlots <= 1))
         {
-            if (Creature* usable = _player->GetNPCIfCanInteractWith(banker->GetGUID(), UNIT_NPC_FLAG_BANKER, NPCFlags2(0)))
+            if (Creature* usable = _player->GetNPCIfCanInteractWith(banker->GetGUID(), UNIT_NPC_FLAG_BANKER))
             {
                 _player->GetSession()->SendShowBank(usable->GetGUID());
                 _bankOpened = true;
