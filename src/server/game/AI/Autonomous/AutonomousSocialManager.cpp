@@ -67,7 +67,7 @@ namespace AutonomousAI
             if (!profile.enabled || profile.guid == leader->GetGUID().GetRawValue())
                 continue;
 
-            Player* candidate = ObjectAccessor::FindPlayer(ObjectGuid(profile.guid));
+            Player* candidate = ObjectAccessor::FindPlayer(AutonomousMakeGuid(profile.guid));
             if (!CanJoin(candidate) || candidate->GetMapId() != leader->GetMapId())
                 continue;
 
@@ -103,7 +103,7 @@ namespace AutonomousAI
             if (!profile.enabled)
                 continue;
 
-            Player* leader = ObjectAccessor::FindPlayer(ObjectGuid(profile.guid));
+            Player* leader = ObjectAccessor::FindPlayer(AutonomousMakeGuid(profile.guid));
             if (!CanJoin(leader))
                 continue;
 
@@ -131,7 +131,7 @@ namespace AutonomousAI
                 if (group->GetMembersCount() >= MAX_GROUP_SIZE)
                     break;
 
-                Player* candidate = ObjectAccessor::FindPlayer(ObjectGuid(secondProfile.guid));
+                Player* candidate = ObjectAccessor::FindPlayer(AutonomousMakeGuid(secondProfile.guid));
                 if (!CanJoin(candidate) || candidate->GetMapId() != leader->GetMapId())
                     continue;
                 if (leader->GetDistance(candidate) > FORM_RANGE)
