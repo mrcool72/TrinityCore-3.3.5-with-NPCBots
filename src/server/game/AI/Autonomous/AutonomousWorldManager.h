@@ -2,6 +2,8 @@
 #define TRINITY_AUTONOMOUS_WORLD_MANAGER_H
 
 #include "Common.h"
+#include "AutonomousRoutineManager.h"
+#include "AutonomousGoalManager.h"
 #include <string>
 #include <unordered_map>
 #include <memory>
@@ -11,8 +13,6 @@ class Player;
 namespace AutonomousAI
 {
     struct Perception;
-    class AutonomousRoutineManager;
-    class AutonomousGoalManager;
     class AutonomousWorldManager
     {
     public:
