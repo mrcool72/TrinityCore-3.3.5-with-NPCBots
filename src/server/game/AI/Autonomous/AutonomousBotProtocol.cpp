@@ -132,6 +132,17 @@ namespace AutonomousAI
     root.put("campaign.knowledge_count", p.campaignKnowledgeCount);
     root.put("campaign.knowledge_confidence", p.campaignKnowledgeConfidence);
     root.put("campaign.knowledge_density", p.campaignKnowledgeDensity);
+    root.put("route.has_plan", p.routeHasPlan);
+    root.put("route.stage", p.routeStage);
+    root.put("route.reason", p.routeReason);
+    root.add_child("route.destination", serializePosition(p.routeDestination));
+    root.put("route.score", p.routeScore);
+    root.put("route.danger", p.routeDanger);
+    root.put("route.confidence", p.routeConfidence);
+    root.put("route.known_nodes", p.routeKnownNodes);
+    root.put("route.known_edges", p.routeKnownEdges);
+    root.put("route.needs_taxi", p.routeNeedsTaxi);
+    root.put("route.taxi_target_map", p.routeTaxiTargetMap);
         root.put("navigation.has_plan", p.navigationHasPlan);
         root.put("navigation.step", p.navigationStep);
         root.put("navigation.stage", p.navigationStage);
