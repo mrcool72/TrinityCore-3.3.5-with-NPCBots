@@ -16,14 +16,14 @@ namespace AutonomousAI
     RelationshipMemory AutonomousRelationshipManager::Load(uint64 botGuid, uint64 otherGuid)
     {
         RelationshipMemory memory;
-        if (QueryResult result = WorldDatabase.Query(
+        if (QueryResult result = WorldDatabase.PQuery(
                 "SELECT score, interactions, preferred FROM autonomous_bot_relationships WHERE bot_guid = {} AND other_guid = {}",
                 botGuid, otherGuid))
         {
             Field* fields = result->Fetch();
-            memory.score = fields[0].Get<int32>();
-            memory.interactions = fields[1].Get<uint32>();
-            memory.preferred = fields[2].Get<uint8>() != 0;
+            memory.score = fields[0].GetInt32();
+            memory.interactions = fields[1].GetUInt32();
+            memory.preferred = fields[2].GetUInt8() != 0;
         }
         return memory;
     }
@@ -87,21 +87,21 @@ namespace AutonomousAI
         Summary& summary = _summaries[botGuid];
         if (!summary.loaded)
         {
-            if (QueryResult result = WorldDatabase.Query(
+            if (QueryResult result = WorldDatabase.PQuery(
                     "SELECT other_guid, score FROM autonomous_bot_relationships WHERE bot_guid = {} AND (preferred = 1 OR score >= 0) ORDER BY preferred DESC, score DESC, interactions DESC LIMIT 1",
                     botGuid))
             {
                 Field* fields = result->Fetch();
-                summary.preferredGuid = fields[0].Get<uint64>();
-                summary.score = fields[1].Get<int32>();
+                summary.preferredGuid = fields[0].GetUInt64();
+                summary.score = fields[1].GetInt32();
             }
-            if (QueryResult result = WorldDatabase.Query(
+            if (QueryResult result = WorldDatabase.PQuery(
                     "SELECT COALESCE(SUM(score), 0), COALESCE(SUM(interactions), 0) FROM autonomous_bot_relationships WHERE bot_guid = {}",
                     botGuid))
             {
                 Field* fields = result->Fetch();
-                summary.score = fields[0].Get<int32>();
-                summary.interactions = fields[1].Get<uint32>();
+                summary.score = fields[0].GetInt32();
+                summary.interactions = fields[1].GetUInt32();
             }
             summary.loaded = true;
         }
