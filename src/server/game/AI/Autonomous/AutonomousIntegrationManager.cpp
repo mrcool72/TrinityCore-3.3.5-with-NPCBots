@@ -35,7 +35,7 @@ namespace AutonomousAI
         // move to the object. The actual interaction remains server-authoritative.
         if (perception.resourceCandidateGuid && perception.resourceCandidateDistance > 6.0f)
         {
-            if (GameObject* object = ObjectAccessor::GetGameObject(*player, ObjectGuid(perception.resourceCandidateGuid)))
+            if (GameObject* object = ObjectAccessor::GetGameObject(*player, [&]() { ObjectGuid g; g.SetRawValue(perception.resourceCandidateGuid); return g; }()))
             {
                 _action.type = ActionType::MOVE_TO;
                 _action.destination = object->GetPosition();
@@ -49,7 +49,7 @@ namespace AutonomousAI
         // says this is meaningful. MoveFollow lets TrinityCore own movement.
         if (!_hasAction && perception.preferredCompanionGuid && perception.socialScore >= 5)
         {
-            if (Player* companion = ObjectAccessor::FindPlayer(ObjectGuid(perception.preferredCompanionGuid)))
+            if (Player* companion = ObjectAccessor::FindPlayer([&]() { ObjectGuid g; g.SetRawValue(perception.preferredCompanionGuid); return g; }()))
             {
                 if (companion->GetMapId() == player->GetMapId() && companion != player && companion->IsInWorld() && companion->IsAlive())
                 {
