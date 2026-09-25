@@ -29,7 +29,7 @@ namespace AutonomousAI
 
         for (WorldObjectInfo const& object : perception.nearbyCreatures)
         {
-            Creature* creature = ObjectAccessor::GetCreature(*_player, ObjectGuid(object.guid));
+            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid));
             if (!creature || object.distance > 60.0f)
                 continue;
             if (creature->IsVendor())
