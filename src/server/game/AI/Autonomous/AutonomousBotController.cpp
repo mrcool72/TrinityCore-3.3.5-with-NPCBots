@@ -1057,7 +1057,7 @@ namespace AutonomousAI
                 ObjectGuid const guid = AutonomousMakeGuid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, UNIT_NPC_FLAG_2_NONE))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, NPCFlags2(0)))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
@@ -1085,7 +1085,7 @@ namespace AutonomousAI
                 ObjectGuid const guid = AutonomousMakeGuid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, UNIT_NPC_FLAG_2_NONE))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, NPCFlags2(0)))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
