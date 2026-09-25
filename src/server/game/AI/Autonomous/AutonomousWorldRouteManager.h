@@ -90,6 +90,7 @@ private:
     bool _hadPreviousNode = false;
     uint64 _lastEdgeKey = 0;
     bool _hadPreviousEdge = false;
+    bool _deathRecorded = false;
     bool _stuck = false;
     uint32 _stuckTimer = 0;
     uint32 _replanCount = 0;
