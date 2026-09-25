@@ -31,13 +31,13 @@ namespace AutonomousAI
             {
                 Field* fields = result->Fetch();
                 AutonomousBotProfile profile;
-                profile.guid = fields[0].Get<uint64>();
-                profile.name = fields[1].Get<std::string>();
-                profile.host = fields[2].Get<std::string>();
-                profile.port = fields[3].Get<uint16>();
-                profile.enabled = fields[4].Get<uint8>() != 0;
-                profile.personality = fields[5].Get<std::string>();
-                profile.role = fields[6].Get<std::string>();
+                profile.guid = fields[0].GetUInt64();
+                profile.name = fields[1].GetString();
+                profile.host = fields[2].GetString();
+                profile.port = fields[3].GetUInt16();
+                profile.enabled = fields[4].GetUInt8() != 0;
+                profile.personality = fields[5].GetString();
+                profile.role = fields[6].GetString();
                 _profiles[profile.guid] = std::move(profile);
             } while (result->NextRow());
         }
