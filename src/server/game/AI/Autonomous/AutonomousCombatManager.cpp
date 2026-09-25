@@ -202,9 +202,9 @@ namespace AutonomousAI
         if (!group)
             return false;
 
-        if (_player->GetMap() && _player->GetMap()->IsDungeon() && group->GetLeader())
+        if (_player->GetMap() && _player->GetMap()->IsDungeon() && ObjectAccessor::FindPlayer(group->GetLeaderGUID()))
         {
-            Player* leader = group->GetLeader();
+            Player* leader = ObjectAccessor::FindPlayer(group->GetLeaderGUID());
             Unit* target = leader ? leader->GetVictim() : nullptr;
             if (target && target->IsAlive() && _player->IsValidAttackTarget(target))
             {
@@ -303,7 +303,7 @@ namespace AutonomousAI
         if (!group)
             return false;
 
-        Player* leader = group->GetLeader();
+        Player* leader = ObjectAccessor::FindPlayer(group->GetLeaderGUID());
         Unit* boss = leader ? leader->GetVictim() : nullptr;
         if (!boss || !boss->IsAlive() || !boss->ToCreature() || boss->ToCreature()->GetCreatureTemplate()->rank < 3)
             return false;
@@ -336,10 +336,10 @@ namespace AutonomousAI
             return false;
 
         Group* group = _player->GetGroup();
-        Player* leader = group ? group->GetLeader() : nullptr;
+        Player* leader = group ? ObjectAccessor::FindPlayer(group->GetLeaderGUID()) : nullptr;
         Unit* boss = leader ? leader->GetVictim() : nullptr;
         if (!boss || !boss->IsAlive() || !boss->ToCreature() ||
-            !boss->GetCreatureTemplate() || boss->GetCreatureTemplate()->rank < 3 ||
+            !boss->ToCreature()->GetCreatureTemplate() || boss->ToCreature()->GetCreatureTemplate()->rank < 3 ||
             !boss->HasUnitState(UNIT_STATE_CASTING))
             return false;
 
