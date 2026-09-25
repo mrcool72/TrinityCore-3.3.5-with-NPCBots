@@ -4,6 +4,11 @@
 
 #include "AutonomousBotProtocol.h"
 
+#ifdef BOOST_BIND_NO_PLACEHOLDERS
+#undef BOOST_BIND_NO_PLACEHOLDERS
+#endif
+
+#include <boost/bind/bind.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/bind/bind.hpp>
