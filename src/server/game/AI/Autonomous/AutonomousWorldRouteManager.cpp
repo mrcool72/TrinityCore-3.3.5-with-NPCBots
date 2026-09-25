@@ -37,7 +37,7 @@ void AutonomousWorldRouteManager::LoadNode(uint32 mapId, uint32 cellX, uint32 ce
     if (_nodes.find(key) != _nodes.end())
         return;
 
-    if (QueryResult result = WorldDatabase.Query(
+    if (QueryResult result = WorldDatabase.PQuery(
         "SELECT x, y, z, o, observations, deaths, danger, objective_count, last_seen FROM autonomous_bot_route_nodes WHERE map_id = {} AND cell_x = {} AND cell_y = {}",
         mapId, cellX, cellY))
     {
@@ -45,11 +45,11 @@ void AutonomousWorldRouteManager::LoadNode(uint32 mapId, uint32 cellX, uint32 ce
         RouteNodeInfo n;
         n.mapId = mapId; n.cellX = cellX; n.cellY = cellY;
         n.position.mapId = mapId;
-        n.position.x = f[0].Get<float>(); n.position.y = f[1].Get<float>();
-        n.position.z = f[2].Get<float>(); n.position.orientation = f[3].Get<float>();
-        n.observations = f[4].Get<uint32>(); n.deaths = f[5].Get<uint32>();
-        n.danger = f[6].Get<uint32>(); n.objectiveCount = f[7].Get<uint32>();
-        n.lastSeen = f[8].Get<uint64>();
+        n.position.x = f[0].GetFloat(); n.position.y = f[1].GetFloat();
+        n.position.z = f[2].GetFloat(); n.position.orientation = f[3].GetFloat();
+        n.observations = f[4].GetUInt32(); n.deaths = f[5].GetUInt32();
+        n.danger = f[6].GetUInt32(); n.objectiveCount = f[7].GetUInt32();
+        n.lastSeen = f[8].GetUInt64();
         _nodes.emplace(key, n);
     }
 }
@@ -59,7 +59,7 @@ void AutonomousWorldRouteManager::LoadMapNodes(uint32 mapId)
     if (_nodes.size() > 8)
         return;
 
-    if (QueryResult result = WorldDatabase.Query(
+    if (QueryResult result = WorldDatabase.PQuery(
         "SELECT cell_x, cell_y, x, y, z, o, observations, deaths, danger, objective_count, last_seen FROM autonomous_bot_route_nodes WHERE map_id = {} ORDER BY danger ASC, observations DESC LIMIT 200",
         mapId))
     {
@@ -68,14 +68,14 @@ void AutonomousWorldRouteManager::LoadMapNodes(uint32 mapId)
             Field* f = result->Fetch();
             RouteNodeInfo n;
             n.mapId = mapId;
-            n.cellX = f[0].Get<uint32>();
-            n.cellY = f[1].Get<uint32>();
+            n.cellX = f[0].GetUInt32();
+            n.cellY = f[1].GetUInt32();
             n.position.mapId = mapId;
-            n.position.x = f[2].Get<float>(); n.position.y = f[3].Get<float>();
-            n.position.z = f[4].Get<float>(); n.position.orientation = f[5].Get<float>();
-            n.observations = f[6].Get<uint32>(); n.deaths = f[7].Get<uint32>();
-            n.danger = f[8].Get<uint32>(); n.objectiveCount = f[9].Get<uint32>();
-            n.lastSeen = f[10].Get<uint64>();
+            n.position.x = f[2].GetFloat(); n.position.y = f[3].GetFloat();
+            n.position.z = f[4].GetFloat(); n.position.orientation = f[5].GetFloat();
+            n.observations = f[6].GetUInt32(); n.deaths = f[7].GetUInt32();
+            n.danger = f[8].GetUInt32(); n.objectiveCount = f[9].GetUInt32();
+            n.lastSeen = f[10].GetUInt64();
             _nodes[NodeKey(mapId, n.cellX, n.cellY)] = n;
         } while (result->NextRow());
     }
@@ -86,7 +86,7 @@ void AutonomousWorldRouteManager::LoadEdges(uint32 mapId, uint32 cellX, uint32 c
     if (!_edges.empty())
         return;
 
-    if (QueryResult result = WorldDatabase.Query(
+    if (QueryResult result = WorldDatabase.PQuery(
         "SELECT from_map, from_cell_x, from_cell_y, to_map, to_cell_x, to_cell_y, traversals, failures, danger, last_used FROM autonomous_bot_route_edges WHERE from_map = {} LIMIT 500",
         mapId))
     {
@@ -94,10 +94,10 @@ void AutonomousWorldRouteManager::LoadEdges(uint32 mapId, uint32 cellX, uint32 c
         {
             Field* f = result->Fetch();
             RouteEdgeInfo e;
-            e.fromMap = f[0].Get<uint32>(); e.fromCellX = f[1].Get<uint32>(); e.fromCellY = f[2].Get<uint32>();
-            e.toMap = f[3].Get<uint32>(); e.toCellX = f[4].Get<uint32>(); e.toCellY = f[5].Get<uint32>();
-            e.traversals = f[6].Get<uint32>(); e.failures = f[7].Get<uint32>();
-            e.danger = f[8].Get<uint32>(); e.lastUsed = f[9].Get<uint64>();
+            e.fromMap = f[0].GetUInt32(); e.fromCellX = f[1].GetUInt32(); e.fromCellY = f[2].GetUInt32();
+            e.toMap = f[3].GetUInt32(); e.toCellX = f[4].GetUInt32(); e.toCellY = f[5].GetUInt32();
+            e.traversals = f[6].GetUInt32(); e.failures = f[7].GetUInt32();
+            e.danger = f[8].GetUInt32(); e.lastUsed = f[9].GetUInt64();
             _edges[EdgeKey(e.fromMap, e.fromCellX, e.fromCellY, e.toMap, e.toCellX, e.toCellY)] = e;
         } while (result->NextRow());
     }
