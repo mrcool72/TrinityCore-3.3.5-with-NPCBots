@@ -54,14 +54,41 @@ void AutonomousWorldRouteManager::LoadNode(uint32 mapId, uint32 cellX, uint32 ce
     }
 }
 
+void AutonomousWorldRouteManager::LoadMapNodes(uint32 mapId)
+{
+    if (_nodes.size() > 8)
+        return;
+
+    if (QueryResult result = WorldDatabase.Query(
+        "SELECT cell_x, cell_y, x, y, z, o, observations, deaths, danger, objective_count, last_seen FROM autonomous_bot_route_nodes WHERE map_id = {} ORDER BY danger ASC, observations DESC LIMIT 200",
+        mapId))
+    {
+        do
+        {
+            Field* f = result->Fetch();
+            RouteNodeInfo n;
+            n.mapId = mapId;
+            n.cellX = f[0].Get<uint32>();
+            n.cellY = f[1].Get<uint32>();
+            n.position.mapId = mapId;
+            n.position.x = f[2].Get<float>(); n.position.y = f[3].Get<float>();
+            n.position.z = f[4].Get<float>(); n.position.orientation = f[5].Get<float>();
+            n.observations = f[6].Get<uint32>(); n.deaths = f[7].Get<uint32>();
+            n.danger = f[8].Get<uint32>(); n.objectiveCount = f[9].Get<uint32>();
+            n.lastSeen = f[10].Get<uint64>();
+            _nodes[NodeKey(mapId, n.cellX, n.cellY)] = n;
+        } while (result->NextRow());
+    }
+}
+
 void AutonomousWorldRouteManager::LoadEdges(uint32 mapId, uint32 cellX, uint32 cellY)
 {
     if (!_edges.empty())
         return;
 
     if (QueryResult result = WorldDatabase.Query(
-        "SELECT from_map, from_cell_x, from_cell_y, to_map, to_cell_x, to_cell_y, traversals, failures, danger, last_used FROM autonomous_bot_route_edges WHERE from_map = {} AND from_cell_x = {} AND from_cell_y = {}",
-        mapId, cellX, cellY))
+        "SELECT from_map, from_cell_x, from_cell_y, to_map, to_cell_x, to_cell_y, traversals, failures, danger, last_used FROM autonomous_bot_route_edges WHERE from_map = {} LIMIT 500",
+        mapId))
     {
         do
         {
@@ -141,6 +168,8 @@ void AutonomousWorldRouteManager::ObserveEdge(uint32 map, uint32 x, uint32 y)
     e.toMap = map; e.toCellX = x; e.toCellY = y;
     ++e.traversals;
     e.danger = _currentDanger;
+    _lastEdgeKey = key;
+    _hadPreviousEdge = true;
     e.lastUsed = static_cast<uint64>(std::time(nullptr));
     if (e.traversals == 1 || e.traversals % 10 == 0 || e.danger > 60)
         SaveEdge(e);
@@ -250,6 +279,7 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
         if (_player->IsAlive())
         {
             ObserveNode(p);
+            LoadMapNodes(_player->GetMapId());
             LoadEdges(_player->GetMapId(), Cell(_player->GetPositionX()), Cell(_player->GetPositionY()));
         }
         else if (_hadPreviousNode)
@@ -260,6 +290,18 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
                 ++itr->second.deaths;
                 itr->second.danger = std::min<uint32>(100, itr->second.danger + 20);
                 SaveNode(itr->second);
+            }
+            if (_hadPreviousEdge)
+            {
+                auto edge = _edges.find(_lastEdgeKey);
+                if (edge != _edges.end())
+                {
+                    ++edge->second.failures;
+                    edge->second.danger = std::min<uint32>(100, edge->second.danger + 20);
+                    SaveEdge(edge->second);
+                }
+                _hadPreviousEdge = false;
+            }
             }
         }
     }
