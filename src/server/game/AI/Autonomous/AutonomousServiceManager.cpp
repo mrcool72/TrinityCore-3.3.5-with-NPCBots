@@ -38,7 +38,7 @@ namespace AutonomousAI
         {
             if (!object.guid || object.distance > 6.0f)
                 continue;
-            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid);
+            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid));
             if (!creature)
                 continue;
             if (!vendor && creature->HasNpcFlag(UNIT_NPC_FLAG_VENDOR))
@@ -51,7 +51,7 @@ namespace AutonomousAI
 
         if (_requestedGuid)
         {
-            Creature* requested = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(_requestedGuid);
+            Creature* requested = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(_requestedGuid));
             if (requested)
             {
                 if (_requestedService == "vendor") vendor = requested;
