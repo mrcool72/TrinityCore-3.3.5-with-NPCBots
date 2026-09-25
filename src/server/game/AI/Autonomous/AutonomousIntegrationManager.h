@@ -3,9 +3,10 @@
 #include "Define.h"
 #include "AutonomousBotProtocol.h"
 
+class Player;
+
 namespace AutonomousAI
 {
-    class Player;
 
     class AutonomousIntegrationManager
     {
