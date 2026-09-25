@@ -50,6 +50,10 @@ public:
     uint32 GetRouteConfidence() const { return _routeConfidence; }
     bool NeedsTaxi() const { return _needsTaxi; }
     uint32 GetTaxiTargetMap() const { return _taxiTargetMap; }
+    char const* GetExecutionState() const { return _executionState.c_str(); }
+    bool IsStuck() const { return _stuck; }
+    uint32 GetReplanCount() const { return _replanCount; }
+    uint32 GetProgressPercent() const { return _progressPercent; }
 
     static uint32 Cell(float coordinate);
     static uint64 NodeKey(uint32 mapId, uint32 cellX, uint32 cellY);
@@ -86,6 +90,13 @@ private:
     bool _hadPreviousNode = false;
     uint64 _lastEdgeKey = 0;
     bool _hadPreviousEdge = false;
+    bool _stuck = false;
+    uint32 _stuckTimer = 0;
+    uint32 _replanCount = 0;
+    uint32 _progressPercent = 0;
+    float _lastPlanDistance = -1.0f;
+    float _bestPlanDistance = -1.0f;
+    std::string _executionState = "idle";
     std::unordered_map<uint64, RouteNodeInfo> _nodes;
     std::unordered_map<uint64, RouteEdgeInfo> _edges;
 };
