@@ -6,6 +6,7 @@
 
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <iomanip>
 #include <sstream>
