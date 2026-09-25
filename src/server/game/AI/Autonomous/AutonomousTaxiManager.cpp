@@ -171,7 +171,7 @@ bool AutonomousTaxiManager::RequestCampaignTravel(uint32 targetMap)
         {
             if (!object.guid || object.distance >= _flightMasterDistance)
                 continue;
-            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid);
+            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid));
             if (!creature || !creature->HasNpcFlag(UNIT_NPC_FLAG_FLIGHTMASTER))
                 continue;
             _flightMasterGuid = creature->GetGUID();
