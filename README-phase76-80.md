@@ -1,23 +1,19 @@
 # Autonomous AI — Phases 76–80
 
-## 76 — Route execution state
-The learned world-route planner reports explicit execution state: idle, traveling, taxi, arrived, or stuck.
+## 76 — Actionable-goal route priority
+Route planning now gives visible quest turn-ins and acceptances priority over opportunistic learned-route exploration.
 
-## 77 — Stuck-route detection
-Local route execution watches distance-to-target. If the bot makes no meaningful progress for 15 seconds, the active learned route is invalidated.
+## 77 — Completion-first routing
+A nearby quest that can be completed receives higher route priority than a merely available quest, reducing unnecessary wandering.
 
-## 78 — Automatic replanning
-A stuck route forces the next planning cycle to choose a fresh route using campaign knowledge, population route memory, danger, and visible quest context.
+## 78 — Route-memory fallback
+Persistent population route memory remains available when there is no immediately actionable quest or learned campaign objective.
 
-## 79 — External route telemetry
-The external AI protocol receives:
-- `route.execution_state`
-- `route.stuck`
-- `route.replan_count`
-- `route.progress_percent`
+## 79 — Safe route behavior
+The existing danger/death scoring remains authoritative for learned route candidates; route-memory exploration is only a fallback.
 
-## 80 — Safety/hardening
-The Phase 71–75 route update control-flow issue was corrected. TrinityCore remains authoritative for actual movement and taxi execution.
+## 80 — Execution continuity
+The existing TrinityCore MotionMaster/taxi execution path continues to consume the unified route planner without handing authoritative movement to the external AI.
 
 ## Validation
-The branch was inspected directly before these changes. Full TrinityCore compile/runtime validation still requires a complete build environment.
+This phase was applied directly to the current `autonomous-ai` branch. A full TrinityCore compile/runtime test still needs to be performed on a complete build environment.
