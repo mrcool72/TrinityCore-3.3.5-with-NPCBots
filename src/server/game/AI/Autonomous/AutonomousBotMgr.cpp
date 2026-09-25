@@ -108,7 +108,7 @@ namespace AutonomousAI
                 continue;
 
             uint64 rawGuid = profile.guid;
-            ObjectGuid guid(rawGuid);
+            ObjectGuid guid = AutonomousMakeGuid(rawGuid);
 
             if (ObjectAccessor::FindPlayer(guid))
             {
