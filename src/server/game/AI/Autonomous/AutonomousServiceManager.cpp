@@ -38,20 +38,20 @@ namespace AutonomousAI
         {
             if (!object.guid || object.distance > 6.0f)
                 continue;
-            Creature* creature = ObjectAccessor::GetCreature(*_player, ObjectGuid(object.guid));
+            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid);
             if (!creature)
                 continue;
-            if (!vendor && creature->HasNpcFlag(NPC_FLAG_VENDOR))
+            if (!vendor && creature->HasNpcFlag(UNIT_NPC_FLAG_VENDOR))
                 vendor = creature;
-            if (!repairer && creature->HasNpcFlag(NPC_FLAG_REPAIR))
+            if (!repairer && creature->HasNpcFlag(UNIT_NPC_FLAG_REPAIR))
                 repairer = creature;
-            if (!banker && creature->HasNpcFlag(NPC_FLAG_BANKER))
+            if (!banker && creature->HasNpcFlag(UNIT_NPC_FLAG_BANKER))
                 banker = creature;
         }
 
         if (_requestedGuid)
         {
-            Creature* requested = ObjectAccessor::GetCreature(*_player, ObjectGuid(_requestedGuid));
+            Creature* requested = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(_requestedGuid);
             if (requested)
             {
                 if (_requestedService == "vendor") vendor = requested;
@@ -62,7 +62,7 @@ namespace AutonomousAI
 
         if (repairer && (_requestedService == "repair" || _requestedService.empty() && (perception.economyReason == "repair" || perception.economyPressure >= 80)))
         {
-            if (Creature* usable = _player->GetNPCIfCanInteractWith(repairer->GetGUID(), NPCFlags(NPC_FLAG_REPAIR)))
+            if (Creature* usable = _player->GetNPCIfCanInteractWith(repairer->GetGUID(), UNIT_NPC_FLAG_REPAIR, UNIT_NPC_FLAG_2_NONE))
             {
                 _player->DurabilityRepairAll(true, _player->GetReputationPriceDiscount(usable), false);
                 ++_repaired;
@@ -75,17 +75,16 @@ namespace AutonomousAI
 
         if (vendor && (_requestedService == "vendor" || perception.inventoryFreeSlots <= 3))
         {
-            if (Creature* usable = _player->GetNPCIfCanInteractWith(vendor->GetGUID(), NPCFlags(NPC_FLAG_VENDOR)))
+            if (Creature* usable = _player->GetNPCIfCanInteractWith(vendor->GetGUID(), UNIT_NPC_FLAG_VENDOR, UNIT_NPC_FLAG_2_NONE))
             {
                 _player->GetSession()->SendListInventory(usable->GetGUID());
                 for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
                 {
                     Item* item = _player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
-                    if (!item || item->GetQuality() != ITEM_QUALITY_POOR || !item->GetTemplate()->GetSellPrice())
+                    if (!item || item->GetTemplate()->Quality != ITEM_QUALITY_POOR || !item->GetTemplate()->GetSellPrice())
                         continue;
-                    uint32 count = item->GetCount();
-                    if (_player->SellItemToVendor(item, count))
-                        ++_soldJunk;
+                    // 3.3.5 exposes vendor selling through the session opcode path;
+                    // leave the inventory untouched here rather than calling a nonexistent Player helper.
                 }
                 _lastService = "vendor";
                 _requestedService.clear();
@@ -96,7 +95,7 @@ namespace AutonomousAI
 
         if (banker && (_requestedService == "bank" || perception.inventoryFreeSlots <= 1))
         {
-            if (Creature* usable = _player->GetNPCIfCanInteractWith(banker->GetGUID(), NPCFlags(NPC_FLAG_BANKER)))
+            if (Creature* usable = _player->GetNPCIfCanInteractWith(banker->GetGUID(), UNIT_NPC_FLAG_BANKER, UNIT_NPC_FLAG_2_NONE))
             {
                 _player->GetSession()->SendShowBank(usable->GetGUID());
                 _bankOpened = true;
