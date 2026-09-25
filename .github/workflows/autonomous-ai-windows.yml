@@ -25,8 +25,19 @@ jobs:
         with:
           arch: x64
 
+      - name: Install Boost
+        uses: MarkusJx/install-boost@v2
+        id: install-boost
+        with:
+          boost_version: 1.84.0
+          link: static
+          platform_version: 2022
+          toolset: msvc
+
       - name: Configure
         shell: pwsh
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
           cmake -S . -B build `
