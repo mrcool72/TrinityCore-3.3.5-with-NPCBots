@@ -249,6 +249,32 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
         return;
     }
 
+    // Explicit campaign knowledge and visible quest givers must win over
+    // opportunistic route-memory exploration. Otherwise a well-known old
+    // route node can pull a questing bot away from an immediately actionable
+    // quest.
+    double nearest = std::numeric_limits<double>::max();
+    for (QuestInfo const& q : p.quests)
+    {
+        if (!q.giverGuid || (!q.canAccept && !q.canComplete) || q.giverDistance >= nearest)
+            continue;
+
+        for (WorldObjectInfo const& o : p.nearbyCreatures)
+            if (o.guid == q.giverGuid)
+            {
+                nearest = q.giverDistance;
+                _hasPlan = true;
+                _planDestination = o.position;
+                _planStage = "quest_giver";
+                _planReason = q.canComplete ? "visible_quest_turnin" : "visible_quest";
+                _planScore = q.canComplete ? 90 : 70;
+                _lastPlanDistance = q.giverDistance;
+                _bestPlanDistance = q.giverDistance;
+                _executionState = "traveling";
+                return;
+            }
+    }
+
     double bestScore = -std::numeric_limits<double>::infinity();
     for (auto const& pair : _nodes)
         ConsiderNode(pair.second, origin, bestScore);
@@ -262,21 +288,8 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
         return;
     }
 
-    double nearest = std::numeric_limits<double>::max();
-    for (QuestInfo const& q : p.quests)
-    {
-        if (!q.giverGuid || (!q.canAccept && !q.canComplete) || q.giverDistance >= nearest)
-            continue;
-        for (WorldObjectInfo const& o : p.nearbyCreatures)
-            if (o.guid == q.giverGuid)
-            {
-                nearest = q.giverDistance; _hasPlan = true; _planDestination = o.position;
-                _planStage = "quest_giver"; _planReason = "visible_quest"; _planScore = 50;
-                _lastPlanDistance = q.giverDistance; _bestPlanDistance = q.giverDistance;
-                _executionState = "traveling";
-                break;
-            }
-    }
+    double unusedNearest = std::numeric_limits<double>::max();
+    (void)unusedNearest;
 }
 
 void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
