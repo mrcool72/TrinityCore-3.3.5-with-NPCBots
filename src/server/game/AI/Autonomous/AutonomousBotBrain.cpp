@@ -298,8 +298,13 @@ namespace AutonomousAI
         else if (_personality == "cautious")
             radius = 20.0f;
 
-        Position destination = _player->GetRandomPoint(_player->GetPosition(), radius);
+        ::Position worldPosition = _player->GetRandomPoint(_player->GetPosition(), radius);
+        Position destination;
         destination.mapId = _player->GetMapId();
+        destination.x = worldPosition.GetPositionX();
+        destination.y = worldPosition.GetPositionY();
+        destination.z = worldPosition.GetPositionZ();
+        destination.orientation = worldPosition.GetOrientation();
         MoveTo(destination);
     }
 }
