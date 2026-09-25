@@ -189,6 +189,17 @@ namespace AutonomousAI
         uint32 campaignKnowledgeCount = 0;
         uint32 campaignKnowledgeConfidence = 0;
         uint32 campaignKnowledgeDensity = 0;
+        bool routeHasPlan = false;
+        std::string routeStage = "idle";
+        std::string routeReason = "none";
+        Position routeDestination;
+        uint32 routeScore = 0;
+        uint32 routeDanger = 0;
+        uint32 routeConfidence = 0;
+        uint32 routeKnownNodes = 0;
+        uint32 routeKnownEdges = 0;
+        bool routeNeedsTaxi = false;
+        uint32 routeTaxiTargetMap = 0;
         bool navigationHasPlan = false;
         uint32 navigationStep = 0;
         std::string navigationStage = "idle";
