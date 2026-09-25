@@ -12,6 +12,7 @@
 
 #include <charconv>
 #include <sstream>
+#include <span>
 
 using namespace Trinity::ChatCommands;
 
