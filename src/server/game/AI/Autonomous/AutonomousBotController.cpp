@@ -1010,7 +1010,7 @@ namespace AutonomousAI
 
             case ActionType::LOOT:
             {
-                ObjectGuid guid(action.targetGuid ? action.targetGuid : _perception.lootGuid);
+                ObjectGuid guid = AutonomousMakeGuid(action.targetGuid ? action.targetGuid : _perception.lootGuid);
                 Creature* creature = ObjectAccessor::GetCreature(*_player, guid);
                 if (!creature || creature->IsAlive() || _player->GetDistance(creature) > 6.0f || creature->loot.empty())
                     break;
@@ -1053,10 +1053,10 @@ namespace AutonomousAI
                 if (!action.questId || !action.targetGuid)
                     break;
 
-                ObjectGuid const guid(action.targetGuid);
+                ObjectGuid const guid = AutonomousMakeGuid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, NPCFlags(UNIT_NPC_FLAG_QUESTGIVER)))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, UNIT_NPC_FLAG_2_NONE))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
@@ -1081,10 +1081,10 @@ namespace AutonomousAI
                 if (!action.questId || !action.targetGuid)
                     break;
 
-                ObjectGuid const guid(action.targetGuid);
+                ObjectGuid const guid = AutonomousMakeGuid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, NPCFlags(NPC_FLAG_QUESTGIVER)))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, UNIT_NPC_FLAG_2_NONE))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
