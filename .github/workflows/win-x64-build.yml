@@ -5,6 +5,7 @@ on:
     branches:
       - 'npcbots_3.3.5'
       - 'CI'
+      - 'autonomous-ai'
   pull_request:
 
 concurrency:
