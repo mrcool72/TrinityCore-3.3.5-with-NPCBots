@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "MotionMaster.h"
 #include "Map.h"
+#include "PetDefines.h"
 
 #include <string>
 
@@ -196,7 +197,7 @@ namespace AutonomousAI
             // nearby packs while the party is repositioning.
             if (leader->GetMap() && leader->GetMap()->IsDungeon() && member->GetDistance(leader) > 30.0f)
             {
-                member->GetMotionMaster()->MoveFollow(leader, 6.0f, ChaseAngle(0.0f));
+                member->GetMotionMaster()->MoveFollow(leader, 6.0f, PET_FOLLOW_ANGLE);
                 continue;
             }
 
