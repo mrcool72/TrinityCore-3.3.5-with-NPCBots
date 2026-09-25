@@ -146,6 +146,10 @@ namespace AutonomousAI
             _perception.routeKnownEdges = _worldRouteManager->GetKnownEdges();
             _perception.routeNeedsTaxi = _worldRouteManager->NeedsTaxi();
             _perception.routeTaxiTargetMap = _worldRouteManager->GetTaxiTargetMap();
+            _perception.routeExecutionState = _worldRouteManager->GetExecutionState();
+            _perception.routeStuck = _worldRouteManager->IsStuck();
+            _perception.routeReplanCount = _worldRouteManager->GetReplanCount();
+            _perception.routeProgressPercent = _worldRouteManager->GetProgressPercent();
         }
 
         if (_campaignExecutor)
