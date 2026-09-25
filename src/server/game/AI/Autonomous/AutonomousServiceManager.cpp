@@ -6,6 +6,7 @@
 #include "ObjectAccessor.h"
 #include "Player.h"
 #include "WorldSession.h"
+#include "SharedDefines.h"
 
 namespace AutonomousAI
 {
