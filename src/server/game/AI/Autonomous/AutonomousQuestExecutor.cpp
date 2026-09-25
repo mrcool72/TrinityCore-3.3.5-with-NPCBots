@@ -107,7 +107,7 @@ namespace AutonomousAI
 
         ObjectGuid objectGuid = AutonomousMakeGuid(guid);
         Object* giver = nullptr;
-        if (Creature* creature = _player->GetNPCIfCanInteractWith(objectGuid, UNIT_NPC_FLAG_QUESTGIVER, NPCFlags2(0)))
+        if (Creature* creature = _player->GetNPCIfCanInteractWith(objectGuid, UNIT_NPC_FLAG_QUESTGIVER))
             giver = creature;
         else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(objectGuid))
             giver = gameObject;
