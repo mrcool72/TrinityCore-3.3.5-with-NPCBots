@@ -295,6 +295,10 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
     if (!_player || !_player->IsInWorld())
         return;
 
+    // Deaths are sampled on the update timer; record a death only once per corpse state.
+    if (_player->IsAlive())
+        _deathRecorded = false;
+
     if (_timer > diff)
         _timer -= diff;
     else
@@ -306,8 +310,9 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
             LoadMapNodes(_player->GetMapId());
             LoadEdges(_player->GetMapId(), Cell(_player->GetPositionX()), Cell(_player->GetPositionY()));
         }
-        else if (_hadPreviousNode)
+        else if (_hadPreviousNode && !_deathRecorded)
         {
+            _deathRecorded = true;
             auto itr = _nodes.find(_lastNodeKey);
             if (itr != _nodes.end())
             {
@@ -380,6 +385,17 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
                     _stuck = true;
                     _executionState = "stuck";
                     ++_replanCount;
+                    if (_hadPreviousEdge)
+                    {
+                        auto edge = _edges.find(_lastEdgeKey);
+                        if (edge != _edges.end())
+                        {
+                            ++edge->second.failures;
+                            edge->second.danger = std::min<uint32>(100, edge->second.danger + 10);
+                            SaveEdge(edge->second);
+                        }
+                        _hadPreviousEdge = false;
+                    }
                     _hasPlan = false;
                     _planTimer = 0;
                     _stuckTimer = 0;
