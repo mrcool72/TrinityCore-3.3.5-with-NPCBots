@@ -69,7 +69,7 @@ private:
 
         for (auto const& profile : profiles)
         {
-            Player* player = ObjectAccessor::FindPlayer(ObjectGuid(profile.guid));
+            Player* player = ObjectAccessor::FindPlayer(AutonomousMakeGuid(profile.guid));
             bool online = player != nullptr;
             bool attached = AutonomousAI::sAutonomousBotMgr.Find(profile.guid) != nullptr;
             bool headless = AutonomousAI::sAutonomousBotMgr.IsHeadless(profile.guid);
