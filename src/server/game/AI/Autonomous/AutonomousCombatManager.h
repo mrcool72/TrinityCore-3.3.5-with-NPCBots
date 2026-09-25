@@ -7,6 +7,7 @@
 #include <string>
 
 class Player;
+class Unit;
 
 namespace AutonomousAI
 {
@@ -35,7 +36,7 @@ namespace AutonomousAI
         bool AssistGroup();
         bool PositionForEncounter();
         bool InterruptBossCast();
-        bool FindGroupTarget(Player*& member, class Unit*& victim) const;
+        bool FindGroupTarget(Player*& member, Unit*& victim) const;
         bool CastKnownSpell(Player* target, uint32 const* spellIds, size_t count) const;
         bool CastKnownSpell(Unit* target, uint32 const* spellIds, size_t count) const;
 

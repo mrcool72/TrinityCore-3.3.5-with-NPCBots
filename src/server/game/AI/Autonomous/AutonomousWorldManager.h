@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <memory>
 
+class Player;
+
 namespace AutonomousAI
 {
     struct Perception;
@@ -14,7 +16,7 @@ namespace AutonomousAI
     class AutonomousWorldManager
     {
     public:
-        explicit AutonomousWorldManager(class Player* player);
+        explicit AutonomousWorldManager(Player* player);
         void Update(uint32 diff, Perception const& perception);
         std::string GetRoutine() const { return _routine; }
         std::string GetLongTermGoal() const { return _longTermGoal; }
@@ -26,7 +28,7 @@ namespace AutonomousAI
 
     private:
         void RememberMap(uint32 mapId);
-        class Player* _player;
+        Player* _player;
         uint32 _timer;
         uint32 _previousActiveQuest;
         uint32 _completedQuests;

@@ -4,6 +4,8 @@
 #include "AutonomousBotProtocol.h"
 #include <unordered_map>
 
+class Player;
+
 namespace AutonomousAI
 {
 struct RouteNodeInfo
@@ -36,7 +38,7 @@ struct RouteEdgeInfo
 class AutonomousWorldRouteManager
 {
 public:
-    explicit AutonomousWorldRouteManager(class Player* player);
+    explicit AutonomousWorldRouteManager(Player* player);
     void Update(uint32 diff, Perception const& perception);
 
     bool HasPlan() const { return _hasPlan; }
@@ -71,7 +73,7 @@ private:
     void SaveEdge(RouteEdgeInfo const& edge);
     void ConsiderNode(RouteNodeInfo const& node, Position const& origin, double& bestScore);
 
-    class Player* _player;
+    Player* _player;
     uint32 _timer = 0;
     uint32 _planTimer = 0;
     uint32 _currentDanger = 0;
