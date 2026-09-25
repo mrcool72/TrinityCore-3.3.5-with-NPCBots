@@ -61,6 +61,7 @@ private:
     void ObserveEdge(uint32 nowMap, uint32 nowCellX, uint32 nowCellY);
     void Plan(Perception const& perception);
     void LoadNode(uint32 mapId, uint32 cellX, uint32 cellY);
+    void LoadMapNodes(uint32 mapId);
     void LoadEdges(uint32 mapId, uint32 cellX, uint32 cellY);
     void SaveNode(RouteNodeInfo const& node);
     void SaveEdge(RouteEdgeInfo const& edge);
@@ -83,6 +84,8 @@ private:
     uint32 _lastCellY = 0;
     uint64 _lastNodeKey = 0;
     bool _hadPreviousNode = false;
+    uint64 _lastEdgeKey = 0;
+    bool _hadPreviousEdge = false;
     std::unordered_map<uint64, RouteNodeInfo> _nodes;
     std::unordered_map<uint64, RouteEdgeInfo> _edges;
 };
