@@ -143,6 +143,10 @@ namespace AutonomousAI
     root.put("route.known_edges", p.routeKnownEdges);
     root.put("route.needs_taxi", p.routeNeedsTaxi);
     root.put("route.taxi_target_map", p.routeTaxiTargetMap);
+    root.put("route.execution_state", p.routeExecutionState);
+    root.put("route.stuck", p.routeStuck);
+    root.put("route.replan_count", p.routeReplanCount);
+    root.put("route.progress_percent", p.routeProgressPercent);
         root.put("navigation.has_plan", p.navigationHasPlan);
         root.put("navigation.step", p.navigationStep);
         root.put("navigation.stage", p.navigationStage);
