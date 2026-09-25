@@ -83,6 +83,8 @@ void AutonomousWorldRouteManager::LoadMapNodes(uint32 mapId)
 
 void AutonomousWorldRouteManager::LoadEdges(uint32 mapId, uint32 cellX, uint32 cellY)
 {
+    (void)cellX;
+    (void)cellY;
     if (!_edges.empty())
         return;
 
