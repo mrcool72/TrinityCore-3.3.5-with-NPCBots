@@ -1,0 +1,33 @@
+name: Autonomous AI Windows x64 Build
+
+on:
+  push:
+    branches: [ "autonomous-ai" ]
+  pull_request:
+    branches: [ "autonomous-ai" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure
+      shell: pwsh
+      run: |
+        cmake -S . -B build -A x64 -DWITH_WARNINGS=0 -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      shell: pwsh
+      run: |
+        cmake --build build --config Release --parallel
+
+    - name: Upload build directory on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: autonomous-ai-build-logs
+        path: build/
