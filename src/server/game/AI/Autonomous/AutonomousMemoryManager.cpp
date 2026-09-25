@@ -20,15 +20,15 @@ namespace AutonomousAI
     {
         if (!_player)
             return;
-        if (QueryResult result = WorldDatabase.Query("SELECT last_map, completed_quests, last_completed_quest, routine, long_term_goal, visited_maps FROM autonomous_bot_memory WHERE guid = {}", _player->GetGUID().GetRawValue()))
+        if (QueryResult result = WorldDatabase.PQuery("SELECT last_map, completed_quests, last_completed_quest, routine, long_term_goal, visited_maps FROM autonomous_bot_memory WHERE guid = {}", _player->GetGUID().GetRawValue()))
         {
             Field* fields = result->Fetch();
-            _lastMap = fields[0].Get<uint32>();
-            _completedQuests = fields[1].Get<uint32>();
-            _lastCompletedQuest = fields[2].Get<uint32>();
-            _routine = fields[3].Get<std::string>();
-            _goal = fields[4].Get<std::string>();
-            std::string visited = fields[5].Get<std::string>();
+            _lastMap = fields[0].GetUInt32();
+            _completedQuests = fields[1].GetUInt32();
+            _lastCompletedQuest = fields[2].GetUInt32();
+            _routine = fields[3].GetString();
+            _goal = fields[4].GetString();
+            std::string visited = fields[5].GetString();
             size_t start = 0;
             while (start < visited.size())
             {
