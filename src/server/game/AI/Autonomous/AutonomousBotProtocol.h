@@ -200,6 +200,10 @@ namespace AutonomousAI
         uint32 routeKnownEdges = 0;
         bool routeNeedsTaxi = false;
         uint32 routeTaxiTargetMap = 0;
+        std::string routeExecutionState = "idle";
+        bool routeStuck = false;
+        uint32 routeReplanCount = 0;
+        uint32 routeProgressPercent = 0;
         bool navigationHasPlan = false;
         uint32 navigationStep = 0;
         std::string navigationStage = "idle";
