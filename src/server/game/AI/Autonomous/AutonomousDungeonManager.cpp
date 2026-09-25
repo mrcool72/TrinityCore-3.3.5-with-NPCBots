@@ -1,4 +1,5 @@
 #include "AutonomousDungeonManager.h"
+#include "AutonomousBotProtocol.h"
 
 #include "Creature.h"
 #include "Group.h"
@@ -40,7 +41,7 @@ namespace AutonomousAI
         if (!_player || !_lastBossGuid)
             return false;
 
-        Creature* boss = ObjectAccessor::GetCreature(*_player, ObjectGuid(_lastBossGuid));
+        Creature* boss = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(_lastBossGuid));
         if (!boss || boss->IsAlive() || !boss->loot.unlootedCount && boss->loot.gold == 0)
             return false;
 
@@ -58,7 +59,7 @@ namespace AutonomousAI
         if (!_player || !_lastBossGuid)
             return false;
 
-        Creature* boss = ObjectAccessor::GetCreature(*_player, ObjectGuid(_lastBossGuid));
+        Creature* boss = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(_lastBossGuid));
         if (!boss || boss->IsAlive())
             return false;
 
@@ -104,7 +105,7 @@ namespace AutonomousAI
             perception.dungeonRegroupRequired || !perception.dungeonNextBossGuid)
             return false;
 
-        Creature* boss = ObjectAccessor::GetCreature(*_player, ObjectGuid(perception.dungeonNextBossGuid));
+        Creature* boss = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(perception.dungeonNextBossGuid));
         if (!boss || !boss->IsAlive())
             return false;
 
