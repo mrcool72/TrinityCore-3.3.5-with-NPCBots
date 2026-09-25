@@ -17,3 +17,9 @@ The existing TrinityCore MotionMaster/taxi execution path continues to consume t
 
 ## Validation
 This phase was applied directly to the current `autonomous-ai` branch. A full TrinityCore compile/runtime test still needs to be performed on a complete build environment.
+
+## Reliability hardening
+
+- Death sampling is deduplicated so one corpse produces one death penalty.
+- A route edge receives a failure/danger penalty when a bot becomes stuck for 15 seconds.
+- Failed edge information is persisted for population-wide reuse.
