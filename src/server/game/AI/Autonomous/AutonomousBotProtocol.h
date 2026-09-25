@@ -7,6 +7,7 @@
 #define TRINITY_AUTONOMOUS_BOT_PROTOCOL_H
 
 #include "Common.h"
+#include "ObjectGuid.h"
 
 #include <string>
 #include <vector>
@@ -230,6 +231,19 @@ namespace AutonomousAI
         std::string lifeSchedule = "adventure";
         uint32 lifeStateAge = 0;
         uint32 lifeCycle = 0;
+        bool traveling = false;
+        std::string travelReason = "none";
+        Position travelDestination;
+        bool needsTown = false;
+        uint64 townServiceGuid = 0;
+        std::string townServiceType = "none";
+        uint32 equipmentUpgradesEquipped = 0;
+        uint32 inventoryFreeSlots = 0;
+        bool equipmentUpgradePending = false;
+        uint32 memoryVisitedMaps = 0;
+        uint32 memoryCompletedQuests = 0;
+        uint32 memoryLastCompletedQuest = 0;
+        uint32 memoryLastMap = 0;
         std::string integrationDecision = "idle";
         uint32 integrationDecisionCount = 0;
         uint64 preferredCompanionGuid = 0;
@@ -256,6 +270,13 @@ namespace AutonomousAI
         std::vector<WorldObjectInfo> nearbyPlayers;
         std::vector<GroupMemberInfo> groupMembers;
     };
+
+    inline ObjectGuid AutonomousMakeGuid(uint64 raw)
+    {
+        ObjectGuid guid;
+        guid.SetRawValue(raw);
+        return guid;
+    }
 
     char const* ToString(ActionType type);
     char const* ToString(GoalType type);
