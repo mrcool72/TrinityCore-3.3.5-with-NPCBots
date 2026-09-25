@@ -299,6 +299,10 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
     if (_player->IsAlive())
         _deathRecorded = false;
 
+    // Deaths are sampled on the update timer; record a death only once per corpse state.
+    if (_player->IsAlive())
+        _deathRecorded = false;
+
     if (_timer > diff)
         _timer -= diff;
     else
