@@ -217,6 +217,9 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
 {
     _hasPlan = false; _needsTaxi = false; _taxiTargetMap = 0; _planScore = 0; _routeConfidence = 0;
     _planStage = "idle"; _planReason = "none";
+    _stuck = false;
+    _stuckTimer = 0;
+    _progressPercent = 0;
 
     if (!_player || !_player->IsAlive())
         return;
@@ -235,6 +238,9 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
         _routeConfidence = p.campaignKnowledgeConfidence;
         _planScore = std::min<uint32>(100, p.campaignKnowledgeConfidence + p.campaignKnowledgeDensity * 2);
         _planStage = "objective"; _planReason = "learned_campaign_objective";
+        _lastPlanDistance = _player->GetMapId() == _planDestination.mapId ? _player->GetDistance(_planDestination.x, _planDestination.y, _planDestination.z) : -1.0f;
+        _bestPlanDistance = _lastPlanDistance;
+        _executionState = _planDestination.mapId != origin.mapId ? "taxi" : "traveling";
         if (_planDestination.mapId != origin.mapId)
         {
             _needsTaxi = true; _taxiTargetMap = _planDestination.mapId;
@@ -249,7 +255,11 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
 
     if (_hasPlan)
     {
-        _planStage = "learned_route"; _planReason = "population_route_memory"; return;
+        _planStage = "learned_route"; _planReason = "population_route_memory";
+        _lastPlanDistance = _player->GetMapId() == _planDestination.mapId ? _player->GetDistance(_planDestination.x, _planDestination.y, _planDestination.z) : -1.0f;
+        _bestPlanDistance = _lastPlanDistance;
+        _executionState = "traveling";
+        return;
     }
 
     double nearest = std::numeric_limits<double>::max();
@@ -261,7 +271,10 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
             if (o.guid == q.giverGuid)
             {
                 nearest = q.giverDistance; _hasPlan = true; _planDestination = o.position;
-                _planStage = "quest_giver"; _planReason = "visible_quest"; _planScore = 50; break;
+                _planStage = "quest_giver"; _planReason = "visible_quest"; _planScore = 50;
+                _lastPlanDistance = q.giverDistance; _bestPlanDistance = q.giverDistance;
+                _executionState = "traveling";
+                break;
             }
     }
 }
@@ -303,6 +316,72 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
                 _hadPreviousEdge = false;
             }
         }
+    }
+
+    if (_hasPlan && _player->IsAlive())
+    {
+        if (_needsTaxi || _planDestination.mapId != _player->GetMapId())
+        {
+            _executionState = "taxi";
+            _stuckTimer = 0;
+            _stuck = false;
+            _progressPercent = 0;
+        }
+        else
+        {
+            float distance = _player->GetDistance(_planDestination.x, _planDestination.y, _planDestination.z);
+            if (distance <= 8.0f)
+            {
+                _executionState = "arrived";
+                _stuckTimer = 0;
+                _stuck = false;
+                _progressPercent = 100;
+            }
+            else
+            {
+                if (_lastPlanDistance < 0.0f)
+                {
+                    _lastPlanDistance = distance;
+                    _bestPlanDistance = distance;
+                }
+
+                if (distance + 1.0f < _bestPlanDistance)
+                {
+                    _bestPlanDistance = distance;
+                    _stuckTimer = 0;
+                    _stuck = false;
+                }
+                else if (distance >= _lastPlanDistance - 0.5f)
+                    _stuckTimer += diff;
+                else
+                    _stuckTimer = 0;
+
+                _lastPlanDistance = distance;
+
+                if (_bestPlanDistance > 8.0f)
+                {
+                    float progress = (_bestPlanDistance - distance) / _bestPlanDistance;
+                    _progressPercent = static_cast<uint32>(std::clamp(progress * 100.0f, 0.0f, 100.0f));
+                }
+
+                if (_stuckTimer >= 15000)
+                {
+                    _stuck = true;
+                    _executionState = "stuck";
+                    ++_replanCount;
+                    _hasPlan = false;
+                    _planTimer = 0;
+                    _stuckTimer = 0;
+                }
+                else
+                    _executionState = "traveling";
+            }
+        }
+    }
+    else if (!_hasPlan)
+    {
+        _executionState = "idle";
+        _progressPercent = 0;
     }
 
     if (_planTimer > diff)
