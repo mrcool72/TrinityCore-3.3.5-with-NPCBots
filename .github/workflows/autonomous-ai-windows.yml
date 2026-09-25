@@ -31,7 +31,11 @@ jobs:
           New-Item -ItemType Directory -Force build | Out-Null
           cmake -S . -B build `
             -G "Visual Studio 17 2022" `
-            -A x64
+            -A x64 `
+            -DCMAKE_CXX_STANDARD=20 `
+            -DCMAKE_CXX_STANDARD_REQUIRED=ON `
+            -DCMAKE_CXX_EXTENSIONS=OFF `
+            -DCMAKE_CXX_FLAGS="/std:c++20 /Zc:__cplusplus /EHsc"
 
       - name: Build Release
         shell: pwsh
