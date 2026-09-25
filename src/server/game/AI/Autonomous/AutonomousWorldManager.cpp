@@ -10,9 +10,9 @@ namespace AutonomousAI
     AutonomousWorldManager::AutonomousWorldManager(Player* player) :
         _player(player), _timer(0), _previousActiveQuest(0), _completedQuests(0),
         _lastCompletedQuest(0), _visitedMaps(0), _lastMapId(0), _recommendedQuest(0),
-        _routine("idle"), _longTermGoal("build a stable adventure routine"), _goalProgress(0),
+        _routine("idle"), _longTermGoal("build a stable adventure routine"),
         _routineManager(std::make_unique<AutonomousRoutineManager>()),
-        _goalManager(std::make_unique<AutonomousGoalManager>())
+        _goalManager(std::make_unique<AutonomousGoalManager>()), _goalProgress(0)
     {
     }
 
