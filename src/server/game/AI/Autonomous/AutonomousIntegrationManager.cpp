@@ -22,31 +22,28 @@ namespace AutonomousAI
         if (!player || externalActive || !player->IsInWorld() || !player->IsAlive() || player->IsInCombat())
             return;
 
-        // Dungeon navigation is owned by the dungeon/social managers. Do not
-        // compete with their movement decisions here.
         if (perception.inDungeon)
             return;
 
-        // Town/economy routing is already handled by AutonomousTownManager.
         if (perception.needsTown || perception.economyNeedsAttention)
             return;
 
-        // If the resource manager identified a quest/world-object opportunity,
-        // move to the object. The actual interaction remains server-authoritative.
         if (perception.resourceCandidateGuid && perception.resourceCandidateDistance > 6.0f)
         {
             if (GameObject* object = ObjectAccessor::GetGameObject(*player, [&]() { ObjectGuid g; g.SetRawValue(perception.resourceCandidateGuid); return g; }()))
             {
                 _action.type = ActionType::MOVE_TO;
-                _action.destination = object->GetPosition();
+                Position const& worldPosition = object->GetPosition();
                 _action.destination.mapId = player->GetMapId();
+                _action.destination.x = worldPosition.GetPositionX();
+                _action.destination.y = worldPosition.GetPositionY();
+                _action.destination.z = worldPosition.GetPositionZ();
+                _action.destination.orientation = worldPosition.GetOrientation();
                 _decision = "resource_object";
                 _hasAction = true;
             }
         }
 
-        // Prefer a persistent social companion when the relationship manager
-        // says this is meaningful. MoveFollow lets TrinityCore own movement.
         if (!_hasAction && perception.preferredCompanionGuid && perception.socialScore >= 5)
         {
             if (Player* companion = ObjectAccessor::FindPlayer([&]() { ObjectGuid g; g.SetRawValue(perception.preferredCompanionGuid); return g; }()))
@@ -59,8 +56,6 @@ namespace AutonomousAI
             }
         }
 
-        // Navigation plans produced by the world/goal system become concrete
-        // TrinityCore movement only when there is no higher-priority action.
         if (!_hasAction && perception.navigationHasPlan && perception.navigationDestination.mapId == player->GetMapId())
         {
             Position const& destination = perception.navigationDestination;
