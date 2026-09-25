@@ -44,7 +44,7 @@ void AutonomousQuestCampaignManager::Rebuild(Perception const& perception)
         Quest const* q = sObjectMgr->GetQuestTemplate(active.questId);
         if (!q) continue;
         _campaignQuest = active.questId;
-        _nextQuest = q->NextQuestInChain ? q->NextQuestInChain : (q->NextQuestId > 0 ? uint32(q->NextQuestId) : 0);
+        _nextQuest = q->GetNextQuestInChain() ? q->GetNextQuestInChain() : (q->GetNextQuestId() > 0 ? uint32(q->GetNextQuestId()) : 0);
         _state = active.complete ? "ready_to_turn_in" : "executing";
         break;
     }
@@ -61,7 +61,7 @@ void AutonomousQuestCampaignManager::Rebuild(Perception const& perception)
         if (best)
         {
             Quest const* q = sObjectMgr->GetQuestTemplate(best);
-            _nextQuest = q ? (q->NextQuestInChain ? q->NextQuestInChain : (q->NextQuestId > 0 ? uint32(q->NextQuestId) : 0)) : 0;
+            _nextQuest = q ? (q->GetNextQuestInChain() ? q->GetNextQuestInChain() : (q->GetNextQuestId() > 0 ? uint32(q->GetNextQuestId()) : 0)) : 0;
             _state = "selected";
         }
     }
@@ -76,7 +76,7 @@ void AutonomousQuestCampaignManager::Rebuild(Perception const& perception)
         ++_chainLength;
         Quest const* q = sObjectMgr->GetQuestTemplate(current);
         if (!q) break;
-        uint32 next = q->NextQuestInChain ? q->NextQuestInChain : (q->NextQuestId > 0 ? uint32(q->NextQuestId) : 0);
+        uint32 next = q->GetNextQuestInChain() ? q->GetNextQuestInChain() : (q->GetNextQuestId() > 0 ? uint32(q->GetNextQuestId()) : 0);
         if (!next) break;
         current = next;
     }
