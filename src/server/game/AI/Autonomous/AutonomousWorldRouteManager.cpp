@@ -302,7 +302,6 @@ void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
                 }
                 _hadPreviousEdge = false;
             }
-            }
         }
     }
 
