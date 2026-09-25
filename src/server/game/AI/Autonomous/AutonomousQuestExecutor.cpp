@@ -1,4 +1,5 @@
 #include "AutonomousQuestExecutor.h"
+#include "AutonomousBotProtocol.h"
 
 #include "GameObject.h"
 #include "MotionMaster.h"
@@ -104,9 +105,9 @@ namespace AutonomousAI
         if (!_player || !guid)
             return false;
 
-        ObjectGuid objectGuid(guid);
+        ObjectGuid objectGuid = AutonomousMakeGuid(guid);
         Object* giver = nullptr;
-        if (Creature* creature = _player->GetNPCIfCanInteractWith(objectGuid, NPCFlags(NPC_FLAG_QUESTGIVER)))
+        if (Creature* creature = _player->GetNPCIfCanInteractWith(objectGuid, UNIT_NPC_FLAG_QUESTGIVER, UNIT_NPC_FLAG_2_NONE))
             giver = creature;
         else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(objectGuid))
             giver = gameObject;
