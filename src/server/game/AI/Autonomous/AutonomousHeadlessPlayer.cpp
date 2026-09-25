@@ -44,7 +44,7 @@ namespace AutonomousAI
         auto player = std::make_unique<Player>(session.get());
         player->GetMotionMaster()->Initialize();
 
-        ObjectGuid guid = sObjectMgr->GetGenerator<HighGuid::Player>().Generate();
+        ObjectGuid guid = ObjectGuid::Create<HighGuid::Player>(sObjectMgr->GetGenerator<HighGuid::Player>().Generate());
         if (!player->Create(guid.GetCounter(), &createInfo))
             return false;
 
