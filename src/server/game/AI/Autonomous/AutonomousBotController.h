@@ -36,6 +36,7 @@ namespace AutonomousAI
     class AutonomousCampaignExecutor;
     class AutonomousCampaignNavigationManager;
     class AutonomousQuestKnowledgeManager;
+    class AutonomousWorldRouteManager;
 
     class AutonomousBotController
     {
@@ -102,6 +103,7 @@ namespace AutonomousAI
         std::unique_ptr<AutonomousCampaignExecutor> _campaignExecutor;
         std::unique_ptr<AutonomousCampaignNavigationManager> _campaignNavigationManager;
         AutonomousQuestKnowledgeManager* _questKnowledgeManager;
+        std::unique_ptr<AutonomousWorldRouteManager> _worldRouteManager;
         bool _externalAIEnabled;
         uint32 _requestTimer;
     };
