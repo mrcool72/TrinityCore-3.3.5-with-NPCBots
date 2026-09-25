@@ -42,6 +42,7 @@
 #include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "Player.h"
+#include "SharedDefines.h"
 #include "QuestDef.h"
 
 #include <algorithm>
