@@ -393,9 +393,7 @@ namespace AutonomousAI
         BuildPerception();
     }
 
-    namespace
-    {
-        constexpr float PERCEPTION_RANGE = 60.0f;
+    constexpr float PERCEPTION_RANGE = 60.0f;
         constexpr float QUEST_GIVER_RANGE = 80.0f;
         constexpr size_t MAX_NEARBY_OBJECTS = 64;
 
@@ -533,7 +531,6 @@ namespace AutonomousAI
             }
 
             (void)player;
-        }
     }
 
     void AutonomousBotController::BuildPerception()
