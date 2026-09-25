@@ -7,6 +7,7 @@
 #include "AutonomousCampaignExecutor.h"
 #include "AutonomousCampaignNavigationManager.h"
 #include "AutonomousQuestKnowledgeManager.h"
+#include "AutonomousWorldRouteManager.h"
 
 #include "AutonomousAITransport.h"
 #include "AutonomousBotBrain.h"
@@ -78,6 +79,7 @@ namespace AutonomousAI
         _campaignExecutor(std::make_unique<AutonomousCampaignExecutor>(_player)),
         _campaignNavigationManager(std::make_unique<AutonomousCampaignNavigationManager>()),
         _questKnowledgeManager(&sAutonomousQuestKnowledgeMgr),
+        _worldRouteManager(std::make_unique<AutonomousWorldRouteManager>(_player)),
         _externalAIEnabled(false),
         _requestTimer(0)
     {
@@ -131,6 +133,21 @@ namespace AutonomousAI
         if (_questKnowledgeManager)
             _questKnowledgeManager->Update(diff, _perception);
 
+        if (_worldRouteManager)
+        {
+            _perception.routeHasPlan = _worldRouteManager->HasPlan();
+            _perception.routeStage = _worldRouteManager->GetPlanStage();
+            _perception.routeReason = _worldRouteManager->GetPlanReason();
+            _perception.routeDestination = _worldRouteManager->GetPlanDestination();
+            _perception.routeScore = _worldRouteManager->GetPlanScore();
+            _perception.routeDanger = _worldRouteManager->GetCurrentDanger();
+            _perception.routeConfidence = _worldRouteManager->GetRouteConfidence();
+            _perception.routeKnownNodes = _worldRouteManager->GetKnownNodes();
+            _perception.routeKnownEdges = _worldRouteManager->GetKnownEdges();
+            _perception.routeNeedsTaxi = _worldRouteManager->NeedsTaxi();
+            _perception.routeTaxiTargetMap = _worldRouteManager->GetTaxiTargetMap();
+        }
+
         if (_campaignExecutor)
             _campaignExecutor->Update(diff, _perception,
                 _campaignManager ? _campaignManager->GetCampaignQuest() : 0,
@@ -138,6 +155,23 @@ namespace AutonomousAI
 
         if (_campaignNavigationManager)
             _campaignNavigationManager->Update(diff, _perception, externalActive);
+
+        if (_worldRouteManager)
+            _worldRouteManager->Update(diff, _perception);
+
+        if (_worldRouteManager && !externalActive && _worldRouteManager->HasPlan())
+        {
+            if (_worldRouteManager->NeedsTaxi())
+                _taxiManager->RequestCampaignTravel(_worldRouteManager->GetTaxiTargetMap());
+            else if (_worldRouteManager->GetPlanDestination().mapId == _player->GetMapId() &&
+                     _player->GetDistance(_worldRouteManager->GetPlanDestination().x,
+                         _worldRouteManager->GetPlanDestination().y,
+                         _worldRouteManager->GetPlanDestination().z) > 8.0f)
+                _player->GetMotionMaster()->MovePoint(0,
+                    _worldRouteManager->GetPlanDestination().x,
+                    _worldRouteManager->GetPlanDestination().y,
+                    _worldRouteManager->GetPlanDestination().z, true);
+        }
 
         if (_worldManager)
         {
