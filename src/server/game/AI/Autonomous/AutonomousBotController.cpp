@@ -592,8 +592,8 @@ namespace AutonomousAI
             _perception.difficulty = static_cast<uint32>(map->GetDifficultyID());
         }
 
-        if (_player->GetMap() && _player->GetMap()->ToInstanceMap()->GetInstanceScript())
-            _perception.dungeonCompletedMask = _player->GetMap()->ToInstanceMap()->GetInstanceScript()->GetCompletedEncounterMask();
+        if (InstanceMap* instanceMap = _player->GetMap() ? _player->GetMap()->ToInstanceMap() : nullptr)
+            _perception.dungeonCompletedMask = instanceMap->GetInstanceScript() ? instanceMap->GetInstanceScript()->GetCompletedEncounterMask() : 0;
         else
             _perception.dungeonCompletedMask = 0;
 
