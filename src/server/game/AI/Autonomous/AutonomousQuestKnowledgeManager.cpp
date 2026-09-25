@@ -34,7 +34,7 @@ void AutonomousQuestKnowledgeManager::LoadQuest(uint32 questId, uint32 entry, ui
 
 void AutonomousQuestKnowledgeManager::LoadLocations(uint32 questId, uint32 entry)
 {
-    if (QueryResult result = WorldDatabase.Query(
+    if (QueryResult result = WorldDatabase.PQuery(
             "SELECT map_id, cell_x, cell_y, x, y, z, o, observations, last_seen FROM autonomous_bot_quest_locations WHERE quest_id = {} AND entry = {}",
             questId, entry))
     {
@@ -44,16 +44,16 @@ void AutonomousQuestKnowledgeManager::LoadLocations(uint32 questId, uint32 entry
             QuestWorldKnowledge knowledge;
             knowledge.questId = questId;
             knowledge.entry = entry;
-            knowledge.mapId = fields[0].Get<uint32>();
-            knowledge.cellX = fields[1].Get<uint32>();
-            knowledge.cellY = fields[2].Get<uint32>();
+            knowledge.mapId = fields[0].GetUInt32();
+            knowledge.cellX = fields[1].GetUInt32();
+            knowledge.cellY = fields[2].GetUInt32();
             knowledge.position.mapId = knowledge.mapId;
-            knowledge.position.x = fields[3].Get<float>();
-            knowledge.position.y = fields[4].Get<float>();
-            knowledge.position.z = fields[5].Get<float>();
-            knowledge.position.orientation = fields[6].Get<float>();
-            knowledge.observations = fields[7].Get<uint32>();
-            knowledge.lastSeen = fields[8].Get<uint64>();
+            knowledge.position.x = fields[3].GetFloat();
+            knowledge.position.y = fields[4].GetFloat();
+            knowledge.position.z = fields[5].GetFloat();
+            knowledge.position.orientation = fields[6].GetFloat();
+            knowledge.observations = fields[7].GetUInt32();
+            knowledge.lastSeen = fields[8].GetUInt64();
             knowledge.confidence = std::min<uint32>(100, knowledge.observations * 15);
             knowledge.density = knowledge.observations;
             _cache[MakeKey(questId, entry, knowledge.mapId, knowledge.cellX, knowledge.cellY)] = knowledge;
@@ -62,7 +62,7 @@ void AutonomousQuestKnowledgeManager::LoadLocations(uint32 questId, uint32 entry
 
     // Read legacy Phase 61 knowledge as a fallback so an existing database is
     // not discarded when the multi-location table is introduced.
-    if (QueryResult legacy = WorldDatabase.Query(
+    if (QueryResult legacy = WorldDatabase.PQuery(
             "SELECT map_id, x, y, z, o, observations, last_seen FROM autonomous_bot_quest_knowledge WHERE quest_id = {} AND entry = {}",
             questId, entry))
     {
@@ -72,14 +72,14 @@ void AutonomousQuestKnowledgeManager::LoadLocations(uint32 questId, uint32 entry
             QuestWorldKnowledge knowledge;
             knowledge.questId = questId;
             knowledge.entry = entry;
-            knowledge.mapId = fields[0].Get<uint32>();
+            knowledge.mapId = fields[0].GetUInt32();
             knowledge.position.mapId = knowledge.mapId;
-            knowledge.position.x = fields[1].Get<float>();
-            knowledge.position.y = fields[2].Get<float>();
-            knowledge.position.z = fields[3].Get<float>();
-            knowledge.position.orientation = fields[4].Get<float>();
-            knowledge.observations = fields[5].Get<uint32>();
-            knowledge.lastSeen = fields[6].Get<uint64>();
+            knowledge.position.x = fields[1].GetFloat();
+            knowledge.position.y = fields[2].GetFloat();
+            knowledge.position.z = fields[3].GetFloat();
+            knowledge.position.orientation = fields[4].GetFloat();
+            knowledge.observations = fields[5].GetUInt32();
+            knowledge.lastSeen = fields[6].GetUInt64();
             knowledge.cellX = Cell(knowledge.position.x);
             knowledge.cellY = Cell(knowledge.position.y);
             knowledge.confidence = std::min<uint32>(100, knowledge.observations * 15);
