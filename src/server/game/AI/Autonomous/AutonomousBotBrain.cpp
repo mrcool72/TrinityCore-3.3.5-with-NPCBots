@@ -208,7 +208,7 @@ namespace AutonomousAI
                     return true;
                 }
 
-                if (Unit* target = ObjectAccessor::GetUnit(*_player, ObjectGuid(object.guid)))
+                if (Unit* target = ObjectAccessor::GetUnit(*_player, AutonomousMakeGuid(object.guid)))
                 {
                     if (_player->IsValidAttackTarget(target))
                         _player->Attack(target, true);
@@ -253,7 +253,7 @@ namespace AutonomousAI
                 {
                     if (target->distance > INTERACTION_RANGE)
                         MoveTo(target->position);
-                    else if (Unit* unit = ObjectAccessor::GetUnit(*_player, ObjectGuid(target->guid)))
+                    else if (Unit* unit = ObjectAccessor::GetUnit(*_player, AutonomousMakeGuid(target->guid)))
                         if (_player->IsValidAttackTarget(unit))
                             _player->Attack(unit, true);
                     return true;
