@@ -406,7 +406,7 @@ namespace AutonomousAI
 
             bool operator()(Creature* creature) const
             {
-                return creature && creature != player && player->IsWithinDistInMap(creature, range);
+                return creature && player->IsWithinDistInMap(creature, range);
             }
         };
 
@@ -1057,7 +1057,7 @@ namespace AutonomousAI
                 ObjectGuid const guid = AutonomousMakeGuid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, NPCFlags2(0)))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
@@ -1085,7 +1085,7 @@ namespace AutonomousAI
                 ObjectGuid const guid = AutonomousMakeGuid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER, NPCFlags2(0)))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_QUESTGIVER))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
