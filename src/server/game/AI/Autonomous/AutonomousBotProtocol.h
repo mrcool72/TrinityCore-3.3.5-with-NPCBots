@@ -8,6 +8,7 @@
 
 #include "Common.h"
 #include "ObjectGuid.h"
+#include <boost/bind/bind.hpp>
 
 #include <string>
 #include <vector>
