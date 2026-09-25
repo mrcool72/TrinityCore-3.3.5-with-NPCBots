@@ -1,0 +1,12 @@
+{
+  "phases": "56-60",
+  "base": "TrinityCore-autonomous-ai-phase51-55.zip",
+  "features": [
+    "campaign objective navigation",
+    "objective visibility/search state",
+    "cross-zone taxi search hop",
+    "campaign execution integration",
+    "external campaign navigation telemetry"
+  ],
+  "full_trinitycore_build_tested": false
+}

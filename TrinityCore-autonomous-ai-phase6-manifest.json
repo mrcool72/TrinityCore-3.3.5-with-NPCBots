@@ -1,0 +1,23 @@
+{
+  "phase": 6,
+  "name": "Headless World Characters",
+  "base": "Phase 5",
+  "branch": "autonomous-ai",
+  "features": [
+    "Load enabled autonomous character records through the normal TrinityCore Player::LoadFromDB pipeline without a client socket",
+    "Insert headless players into Map and ObjectAccessor",
+    "Attach existing AutonomousPlayerAI and external AI controller",
+    "Save/unload through normal WorldSession::LogoutPlayer path",
+    "Start and stop all enabled headless bots",
+    "Report headless state in .autobot list",
+    "WoW addon controls for start/stop headless bots"
+  ],
+  "core_integration": [
+    "src/server/game/Handlers/CharacterHandler.cpp receives a small bridge using the existing LoginQueryHolder",
+    "src/server/game/AI/Autonomous/AutonomousHeadlessPlayer.h/.cpp",
+    "src/server/game/AI/Autonomous/AutonomousBotMgr.*",
+    "src/server/scripts/Commands/cs_autonomousbot.cpp",
+    "src/server/scripts/Custom/custom_autonomousbot_lifecycle.cpp"
+  ],
+  "important": "Use dedicated accounts for headless characters; do not log the same account in interactively while its character is active."
+}

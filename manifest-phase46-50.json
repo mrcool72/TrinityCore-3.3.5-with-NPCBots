@@ -1,0 +1,7 @@
+{
+  "phases": [46,47,48,49,50],
+  "name": "Autonomous Quest Campaign Engine",
+  "base": "Phase 41-45",
+  "database_migration": false,
+  "features": ["quest-chain graph discovery", "cross-zone campaign metadata", "dependency-aware selection", "dynamic reprioritization", "end-to-end campaign telemetry"]
+}

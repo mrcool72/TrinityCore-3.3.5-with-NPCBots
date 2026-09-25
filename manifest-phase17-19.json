@@ -1,0 +1,17 @@
+{
+  "phases": "17-19",
+  "name": "Dungeon Automation Bundle",
+  "base": "Phase 16",
+  "database_migration": false,
+  "features": [
+    "dungeon objective discovery",
+    "completed encounter mask perception",
+    "local dungeon leader navigation fallback",
+    "boss cast perception",
+    "capability-driven boss interrupts",
+    "boss corpse loot perception",
+    "external loot action",
+    "automatic autonomous leader boss looting",
+    "TrinityCore-authoritative loot permissions"
+  ]
+}

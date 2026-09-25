@@ -1,0 +1,20 @@
+{
+  "phase": 11,
+  "name": "role-aware combat coordination",
+  "base": "phase10",
+  "database_migration": false,
+  "new_files": [
+    "src/server/game/AI/Autonomous/AutonomousCombatManager.h",
+    "src/server/game/AI/Autonomous/AutonomousCombatManager.cpp",
+    "README-phase11.md",
+    "manifest-phase11.json"
+  ],
+  "modified_files": [
+    "src/server/game/AI/Autonomous/AutonomousBotController.h",
+    "src/server/game/AI/Autonomous/AutonomousBotController.cpp",
+    "src/server/game/AI/Autonomous/AutonomousBotProtocol.h",
+    "src/server/game/AI/Autonomous/AutonomousBotProtocol.cpp",
+    "src/server/game/AI/Autonomous/README.md",
+    "README.md"
+  ]
+}

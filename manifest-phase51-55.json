@@ -1,0 +1,25 @@
+{
+  "phases": "51-55",
+  "base": "TrinityCore-autonomous-ai-phase46-50.zip",
+  "features": [
+    "campaign-to-quest execution",
+    "objective target resolution",
+    "quest-giver travel and campaign continuation",
+    "stall detection with bounded retry and quest-executor recovery",
+    "external AI campaign execution telemetry"
+  ],
+  "files": [
+    "src/server/game/AI/Autonomous/AutonomousCampaignExecutor.h",
+    "src/server/game/AI/Autonomous/AutonomousCampaignExecutor.cpp",
+    "src/server/game/AI/Autonomous/AutonomousQuestCampaignManager.cpp",
+    "src/server/game/AI/Autonomous/AutonomousBotProtocol.h",
+    "src/server/game/AI/Autonomous/AutonomousBotProtocol.cpp",
+    "src/server/game/AI/Autonomous/AutonomousBotController.h",
+    "src/server/game/AI/Autonomous/AutonomousBotController.cpp"
+  ],
+  "validation": [
+    "unzip -t",
+    "structural brace check"
+  ],
+  "full_trinitycore_build": false
+}

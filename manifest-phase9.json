@@ -1,0 +1,13 @@
+{
+  "phase": 9,
+  "title": "Autonomous population behavior",
+  "base": "Phase 8",
+  "features": [
+    "personality-aware local brain",
+    "health recovery behavior",
+    "partial quest objective progress",
+    "personality applied on attach and edit",
+    "external AI remains authoritative when connected"
+  ],
+  "database_migration_required": false
+}

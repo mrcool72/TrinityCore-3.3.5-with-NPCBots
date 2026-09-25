@@ -1,0 +1,18 @@
+{
+  "phases": [
+    23,
+    24,
+    25,
+    26
+  ],
+  "name": "World Simulation Foundations",
+  "base": "Phase 20-22",
+  "database_migration": true,
+  "features": [
+    "world travel planner",
+    "town service awareness",
+    "automatic equipment upgrades",
+    "persistent world memory",
+    "external AI perception for travel/town/equipment/memory"
+  ]
+}

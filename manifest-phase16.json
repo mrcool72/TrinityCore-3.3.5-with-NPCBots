@@ -1,0 +1,13 @@
+{
+  "phase": 16,
+  "name": "Boss & Encounter Coordination",
+  "base": "Phase 15",
+  "database_migration": false,
+  "features": [
+    "boss encounter metadata",
+    "boss death detection",
+    "boss casting awareness",
+    "role-aware dungeon positioning",
+    "fixed dungeon regroup state"
+  ]
+}

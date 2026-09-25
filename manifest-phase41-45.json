@@ -1,0 +1,16 @@
+{
+  "phases": [41, 42, 43, 44, 45],
+  "name": "World Travel, Services, and End-to-End Integration",
+  "base": "Phase 36-40",
+  "database_migration": false,
+  "features": [
+    "authoritative taxi travel",
+    "cross-map exploration via known taxi routes",
+    "vendor junk selling",
+    "repair service execution",
+    "bank interaction",
+    "expanded autonomous action protocol",
+    "integration test server",
+    "perception frame validator"
+  ]
+}

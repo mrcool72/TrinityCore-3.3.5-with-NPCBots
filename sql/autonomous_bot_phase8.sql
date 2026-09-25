@@ -1,0 +1,3 @@
+-- Phase 8: local autonomous population behavior.
+-- No schema change is required. This marker is intentionally idempotent.
+-- Phase 8 uses the existing autonomous_bot_config table.

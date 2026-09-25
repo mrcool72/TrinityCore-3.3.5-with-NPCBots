@@ -1,85 +1,36 @@
-# ![logo](https://community.trinitycore.org/public/style_images/1_trinitycore.png) TrinityCore (3.3.5)
+# Autonomous AI — Phases 20–22
 
---------------
+Cumulative package based on the Phase 17–19 build.
 
+## Phase 20
+Advanced quest-chain awareness, item-objective grinding fallback, and runtime world memory.
 
-* [Build Status](#build-status)
-* [Introduction](#introduction)
-* [Requirements](#requirements)
-* [Install](#install)
-* [Reporting issues](#reporting-issues)
-* [Submitting fixes](#submitting-fixes)
-* [Copyright](#copyright)
-* [Authors &amp; Contributors](#authors--contributors)
-* [Links](#links)
+## Phase 21
+External planner contract with long-term goals, routines, progression counters and recommended quests.
 
+## Phase 22
+Persistent-world behavior foundation for routines, regional memory and future schedules/relationships.
 
-
-## Build Status
-
-[![Fetch status](https://github.com/trickerer/NPCBots-cron/actions/workflows/automerge.yml/badge.svg)](https://github.com/trickerer/NPCBots-cron/actions/workflows/automerge.yml)
-
-3.3.5
-:------------:
-[![GCC](https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots/actions/workflows/gcc-build.yml/badge.svg)](https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots/actions/workflows/gcc-build.yml)
-[![Build status](https://ci.appveyor.com/api/projects/status/jck8c86eiti50v26/branch/npcbots_3.3.5?svg=true)](https://ci.appveyor.com/project/trickerer/trinitycore-3-3-5-with-npcbots/branch/npcbots_3.3.5)
-
-## Introduction
-
-TrinityCore is a *MMORPG* Framework based mostly in C++.
-
-It is derived from *MaNGOS*, the *Massive Network Game Object Server*, and is
-based on the code of that project with extensive changes over time to optimize,
-improve and cleanup the codebase at the same time as improving the in-game
-mechanics and functionality.
-
-[NPCBots](https://github.com/trickerer/Trinity-Bots) is TrinityCore mod.
-
-It is completely open source; community involvement is highly encouraged.
-
-## Requirements
+No database migration is required. Runtime memory intentionally resets when the world process restarts; the existing autonomous bot profile database remains the persistent identity/configuration layer.
 
 
-Software requirements are available in the [wiki](https://trinitycore.info/en/install/requirements) for
-Windows, Linux and macOS.
+## Phase 23-26
+
+The cumulative package adds world travel, town-service awareness, conservative equipment upgrades, and persistent world memory. Apply `sql/autonomous_bot_phase23-26.sql` to the World database.
 
 
-## Install
+## Phases 27-30
+Persistent relationships, social memory, stable routines, and long-term goal planning are included in `README-phase27-30.md`. Apply `sql/autonomous_bot_phase27-30.sql`.
 
-Detailed TrinityCore installation guides are available in the [wiki](https://trinitycore.info/en/home) for
-Windows, Linux and macOS.
-NPCBots installation guide is available in the [NPCBots Readme](https://github.com/trickerer/Trinity-Bots#npcbot-mod-installation).
+## Phases 31-35 — world lifecycle and simulation
 
+Adds high-level navigation stages, resource/objective awareness, economy pressure, long-running
+schedule state, and a unified life-cycle state. These are planning signals; TrinityCore remains
+authoritative for actual movement, combat, inventory, quests, and interactions.
 
-## Reporting issues
+## Phases 36-40
+Added autonomous action integration, world-object approach, social follow execution, navigation execution, and integration telemetry. See `README-phase36-40.md`.
 
-NPCBots issues can be reported via the [Github issue tracker](https://github.com/trickerer/Trinity-Bots/issues/).
+## Phases 41-45
 
-Please take the time to review existing issues before submitting your own to
-prevent duplicates.
-
-
-## Submitting fixes
-
-C++ fixes are submitted as [pull requests](https://github.com/trickerer/TrinityCore-3.3.5-with-NPCBots/pulls).
-
-
-## Copyright
-
-License: GPL 2.0
-
-Read file [COPYING](COPYING).
-
-
-## Authors &amp; Contributors
-
-Read file [AUTHORS](AUTHORS).
-
-
-## Links
-
-* [NPCBots Readme](https://github.com/trickerer/Trinity-Bots/)
-* [TrinityCore Website](https://www.trinitycore.org)
-* [TrinityCore Wiki](https://www.trinitycore.info)
-* [TrinityCore Forums](https://talk.trinitycore.org/)
-* [TrinityCore Discord](https://discord.trinitycore.org/)
+Added real taxi travel, cross-map exploration via known taxi paths, authoritative vendor/repair/bank service execution, expanded external actions, and a protocol-level integration test harness. See `README-phase41-45.md`.

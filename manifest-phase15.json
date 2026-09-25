@@ -1,0 +1,15 @@
+{
+  "phase": 15,
+  "name": "Dungeon Party AI",
+  "base": "Phase 14",
+  "database_migration": false,
+  "features": [
+    "tank-preferred dungeon pull leader",
+    "leader-target-only dungeon assistance",
+    "dungeon follower brain suppression",
+    "dungeon regroup behavior",
+    "wipe state reporting",
+    "boss target metadata",
+    "external AI dungeon state perception"
+  ]
+}

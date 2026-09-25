@@ -1,0 +1,19 @@
+{
+  "phase": 7,
+  "title": "Automatic Bot Character Creation",
+  "base": "TrinityCore-autonomous-ai-phase6",
+  "features": [
+    "autobot create",
+    "persistent character creation",
+    "headless loading through LoginQueryHolder",
+    "normal logout/save path"
+  ],
+  "files": [
+    "patches/phase7-core.patch",
+    "sql/autonomous_bot_phase7.sql",
+    "src/server/game/AI/Autonomous/AutonomousHeadlessPlayer.h",
+    "src/server/game/AI/Autonomous/AutonomousHeadlessPlayer.cpp",
+    "src/server/scripts/Commands/cs_autonomousbot.cpp",
+    "README.md"
+  ]
+}

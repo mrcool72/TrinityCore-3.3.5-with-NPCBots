@@ -1,0 +1,12 @@
+{
+  "phases": [20, 21, 22],
+  "base": "Phase 17-19",
+  "database_migration": false,
+  "features": [
+    "quest chain metadata and continuation preference",
+    "item objective hunting fallback",
+    "runtime quest and region memory",
+    "external long-term planner perception contract",
+    "persistent-world routine foundation"
+  ]
+}

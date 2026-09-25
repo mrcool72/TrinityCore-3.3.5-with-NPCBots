@@ -1,0 +1,14 @@
+{
+  "phase": 10,
+  "title": "Autonomous social groups",
+  "base": "Phase 9",
+  "features": [
+    "automatic temporary 2-5 bot parties using TrinityCore Group",
+    "complementary nearby partner selection",
+    "idle follow behavior",
+    "combat assistance against leader target",
+    "automatic group teardown when bots separate or disappear",
+    "shutdown cleanup before headless unload"
+  ],
+  "database_migration_required": false
+}

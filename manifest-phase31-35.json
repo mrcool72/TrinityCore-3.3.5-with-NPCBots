@@ -1,0 +1,14 @@
+{
+  "phases": [31, 32, 33, 34, 35],
+  "name": "World Lifecycle and Simulation",
+  "base": "Phase 27-30",
+  "database_migration": false,
+  "features": [
+    "multi-step navigation intent",
+    "resource and objective awareness",
+    "economy pressure planning",
+    "long-running daily schedule state",
+    "unified autonomous life-cycle state",
+    "external AI perception for world lifecycle"
+  ]
+}

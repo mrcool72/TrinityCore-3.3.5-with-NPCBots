@@ -1,0 +1,27 @@
+/autobot
+
+.autobot list
+.autobot add
+.autobot delete
+.autobot edit
+.autobot attach
+.autobot detach
+.autobot start
+.autobot stop
+.autobot info
+.autobot quest <id>
+.autobot edit endpoint <host> <port>
+.autobot edit personality <name>
+.autobot list
+.autobot startall
+.autobot stopall
+.autobot create <name> <race> <class> [gender] [accountId]    (Example: .autobot create Aelwyn 1 3 0)
+.autobot edit personality explorer
+.autobot edit personality quester
+.autobot edit personality cautious
+.autobot edit personality balanced
+.autobot edit role tank
+.autobot edit role healer
+.autobot edit role ranged
+.autobot edit role damage
+.autobot edit role auto

@@ -1,0 +1,21 @@
+{
+  "phase": 13,
+  "name": "Party Coordination",
+  "base": "TrinityCore-autonomous-ai-phase12.zip",
+  "features": [
+    "group-aware external AI perception",
+    "group member role/health/quest state reporting",
+    "leader quest synchronization for eligible autonomous party members"
+  ],
+  "database_migration": false,
+  "files_added": ["README-phase13.md", "manifest-phase13.json"],
+  "files_modified": [
+    "README.md",
+    "src/server/game/AI/Autonomous/AutonomousBotProtocol.h",
+    "src/server/game/AI/Autonomous/AutonomousBotProtocol.cpp",
+    "src/server/game/AI/Autonomous/AutonomousBotController.h",
+    "src/server/game/AI/Autonomous/AutonomousBotController.cpp",
+    "src/server/game/AI/Autonomous/AutonomousSocialManager.h",
+    "src/server/game/AI/Autonomous/AutonomousSocialManager.cpp"
+  ]
+}

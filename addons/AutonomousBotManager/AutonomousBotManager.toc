@@ -1,0 +1,5 @@
+## Interface: 30300
+## Title: Autonomous Bot Manager
+## Notes: GM UI for autonomous AI player bots
+## Author: Custom
+AutonomousBotManager.lua

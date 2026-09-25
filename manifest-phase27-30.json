@@ -1,0 +1,14 @@
+{
+  "phases": [27, 28, 29, 30],
+  "name": "Persistent MMO Behavior",
+  "base": "Phase 23-26",
+  "database_migration": true,
+  "features": [
+    "persistent bot relationships",
+    "bot-to-bot social memory",
+    "stable autonomous routines",
+    "persistent long-term goals",
+    "goal progress perception",
+    "relationship-aware group formation"
+  ]
+}

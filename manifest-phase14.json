@@ -1,0 +1,14 @@
+{
+  "phase": 14,
+  "name": "Dungeon Awareness",
+  "base": "phase13",
+  "db_migration": false,
+  "features": [
+    "dungeon and raid perception",
+    "instance id and difficulty perception",
+    "group alive/dead/average-health/combat state",
+    "tighter dungeon following",
+    "larger dungeon group separation tolerance"
+  ],
+  "zip_sha256": "bdbd7cef5519445fd5c468de1e24c44adf33356ca2f97933a227426723f71187"
+}
