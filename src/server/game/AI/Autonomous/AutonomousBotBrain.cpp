@@ -298,7 +298,7 @@ namespace AutonomousAI
         else if (_personality == "cautious")
             radius = 20.0f;
 
-        Position destination = _player->GetRandomPoint(_player->GetPosition(), radius, 8.0f);
+        Position destination = _player->GetRandomPoint(_player->GetPosition(), radius);
         destination.mapId = _player->GetMapId();
         MoveTo(destination);
     }
