@@ -30,7 +30,7 @@ namespace AutonomousAI
             return false;
 
         Creature* flightMaster = ObjectAccessor::GetCreature(*_player, _flightMasterGuid);
-        if (!flightMaster || !flightMaster->HasNpcFlag(NPC_FLAG_FLIGHTMASTER) ||
+        if (!flightMaster || !flightMaster->HasNpcFlag(UNIT_NPC_FLAG_FLIGHTMASTER) ||
             !_player->IsWithinDistInMap(flightMaster, 8.0f))
             return false;
 
@@ -44,7 +44,7 @@ namespace AutonomousAI
         _sourceNode = _requestedSource;
         _destinationNode = _requestedDestination;
         if (TaxiNodesEntry const* node = sTaxiNodesStore.LookupEntry(_destinationNode))
-            _destinationMap = node->map_id;
+            _destinationMap = node->ContinentID;
         _routeActive = true;
         _state = "flying";
         _requestedSource = 0;
@@ -73,7 +73,7 @@ namespace AutonomousAI
         for (uint32 id = 1; id < sTaxiNodesStore.GetNumRows(); ++id)
         {
             TaxiNodesEntry const* node = sTaxiNodesStore.LookupEntry(id);
-            if (!node || node->map_id == sourceNode->map_id || !node->ID)
+            if (!node || node->ContinentID == sourceNode->ContinentID || !node->ID)
                 continue;
             if (!_player->m_taxi.IsTaximaskNodeKnown(id))
                 continue;
@@ -112,9 +112,9 @@ bool AutonomousTaxiManager::RequestCampaignTravel(uint32 targetMap)
     for (uint32 id = 1; id < sTaxiNodesStore.GetNumRows(); ++id)
     {
         TaxiNodesEntry const* node = sTaxiNodesStore.LookupEntry(id);
-        if (!node || !node->ID || node->map_id == sourceNode->map_id)
+        if (!node || !node->ID || node->ContinentID == sourceNode->ContinentID)
             continue;
-        if (targetMap && node->map_id != targetMap)
+        if (targetMap && node->ContinentID != targetMap)
             continue;
         if (!_player->m_taxi.IsTaximaskNodeKnown(id))
             continue;
@@ -171,8 +171,8 @@ bool AutonomousTaxiManager::RequestCampaignTravel(uint32 targetMap)
         {
             if (!object.guid || object.distance >= _flightMasterDistance)
                 continue;
-            Creature* creature = ObjectAccessor::GetCreature(*_player, ObjectGuid(object.guid));
-            if (!creature || !creature->HasNpcFlag(NPC_FLAG_FLIGHTMASTER))
+            Creature* creature = ObjectAccessor::GetCreature(*_player, AutonomousMakeGuid(object.guid);
+            if (!creature || !creature->HasNpcFlag(UNIT_NPC_FLAG_FLIGHTMASTER))
                 continue;
             _flightMasterGuid = creature->GetGUID();
             _flightMasterDistance = object.distance;
