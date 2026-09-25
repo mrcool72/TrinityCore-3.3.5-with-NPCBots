@@ -3,6 +3,9 @@
 #include "Group.h"
 #include "ObjectAccessor.h"
 #include "Player.h"
+#include "Map.h"
+#include "MotionMaster.h"
+#include "PetDefines.h"
 #include "Spell.h"
 #include "Unit.h"
 
@@ -321,7 +324,7 @@ namespace AutonomousAI
         if (_role == AutonomousCombatRole::HEALER || _role == AutonomousCombatRole::RANGED)
         {
             if (distance < 12.0f || distance > 35.0f)
-                _player->GetMotionMaster()->MoveFollow(leader, _role == AutonomousCombatRole::HEALER ? 14.0f : 20.0f, ChaseAngle(0.0f));
+                _player->GetMotionMaster()->MoveFollow(leader, _role == AutonomousCombatRole::HEALER ? 14.0f : 20.0f, PET_FOLLOW_ANGLE);
             return true;
         }
 
