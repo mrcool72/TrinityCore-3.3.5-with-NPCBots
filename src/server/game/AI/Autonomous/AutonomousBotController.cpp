@@ -322,7 +322,7 @@ namespace AutonomousAI
         _perception.socialInteractions = sAutonomousRelationshipMgr.GetInteractionCount(_player->GetGUID().GetRawValue());
         if (_perception.preferredCompanionGuid)
         {
-            if (Player* companion = ObjectAccessor::FindPlayer(ObjectGuid(_perception.preferredCompanionGuid)))
+            if (Player* companion = ObjectAccessor::FindPlayer(([&]() { ObjectGuid g; g.SetRawValue(_perception.preferredCompanionGuid); return g; })()))
                 _perception.preferredCompanionName = companion->GetName();
         }
 
@@ -705,7 +705,7 @@ namespace AutonomousAI
 
         if (_perception.inDungeon && _perception.bossGuid)
         {
-            Unit* boss = ObjectAccessor::GetUnit(*_player, ObjectGuid(_perception.bossGuid));
+            Unit* boss = ObjectAccessor::GetUnit(*_player, ([&]() { ObjectGuid g; g.SetRawValue(_perception.bossGuid); return g; })());
             if (!boss || !boss->IsAlive())
             {
                 _perception.bossDead = true;
@@ -806,7 +806,7 @@ namespace AutonomousAI
 
         for (WorldObjectInfo const& object : _perception.nearbyCreatures)
         {
-            Unit* unit = ObjectAccessor::GetUnit(*_player, ObjectGuid(object.guid));
+            Unit* unit = ObjectAccessor::GetUnit(*_player, ([&]() { ObjectGuid g; g.SetRawValue(object.guid); return g; })());
             Creature* creature = unit ? unit->ToCreature() : nullptr;
             if (creature && creature->IsAlive() && creature->GetCreatureTemplate() && creature->GetCreatureTemplate()->rank >= 3)
             {
@@ -1041,7 +1041,7 @@ namespace AutonomousAI
             case ActionType::ATTACK:
                 if (action.targetGuid)
                 {
-                    if (Unit* target = ObjectAccessor::GetUnit(*_player, ObjectGuid(action.targetGuid)))
+                    if (Unit* target = ObjectAccessor::GetUnit(*_player, ([&]() { ObjectGuid g; g.SetRawValue(action.targetGuid); return g; })()))
                         if (_player->IsValidAttackTarget(target))
                             _player->Attack(target, true);
                 }
@@ -1056,7 +1056,7 @@ namespace AutonomousAI
                 ObjectGuid const guid(action.targetGuid);
                 Object* questGiver = nullptr;
 
-                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, NPCFlags(NPC_FLAG_QUESTGIVER)))
+                if (Creature* creature = _player->GetNPCIfCanInteractWith(guid, NPCFlags(UNIT_NPC_FLAG_QUESTGIVER)))
                     questGiver = creature;
                 else if (GameObject* gameObject = _player->GetGameObjectIfCanInteractWith(guid))
                     questGiver = gameObject;
