@@ -288,8 +288,6 @@ void AutonomousWorldRouteManager::Plan(Perception const& p)
         return;
     }
 
-    double unusedNearest = std::numeric_limits<double>::max();
-    (void)unusedNearest;
 }
 
 void AutonomousWorldRouteManager::Update(uint32 diff, Perception const& p)
