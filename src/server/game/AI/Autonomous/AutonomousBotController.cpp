@@ -592,8 +592,8 @@ namespace AutonomousAI
             _perception.difficulty = static_cast<uint32>(map->GetDifficultyID());
         }
 
-        if (_player->GetMap() && _player->GetMap()->GetInstanceScript())
-            _perception.dungeonCompletedMask = _player->GetMap()->GetInstanceScript()->GetCompletedEncounterMask();
+        if (_player->GetMap() && _player->GetMap()->ToInstanceMap()->GetInstanceScript())
+            _perception.dungeonCompletedMask = _player->GetMap()->ToInstanceMap()->GetInstanceScript()->GetCompletedEncounterMask();
         else
             _perception.dungeonCompletedMask = 0;
 
@@ -763,7 +763,7 @@ namespace AutonomousAI
         float perceptionRange = _perception.inDungeon ? 120.0f : PERCEPTION_RANGE;
         std::vector<Creature*> creatures;
         NearbyCreatureCheck creatureCheck { _player, perceptionRange };
-        Bcore::CreatureListSearcher<NearbyCreatureCheck> creatureSearcher(_player, creatures, creatureCheck);
+        Trinity::CreatureListSearcher<NearbyCreatureCheck> creatureSearcher(_player, creatures, creatureCheck);
         Cell::VisitAllObjects(_player, creatureSearcher, perceptionRange);
 
         std::set<uint32> nearbyQuestGiverEntries;
@@ -780,7 +780,7 @@ namespace AutonomousAI
 
         std::vector<GameObject*> gameObjects;
         NearbyGameObjectCheck gameObjectCheck { _player, perceptionRange };
-        Bcore::GameObjectListSearcher<NearbyGameObjectCheck> gameObjectSearcher(_player, gameObjects, gameObjectCheck);
+        Trinity::GameObjectListSearcher<NearbyGameObjectCheck> gameObjectSearcher(_player, gameObjects, gameObjectCheck);
         Cell::VisitAllObjects(_player, gameObjectSearcher, perceptionRange);
 
         for (GameObject* gameObject : gameObjects)
@@ -791,7 +791,7 @@ namespace AutonomousAI
 
         std::vector<Unit*> units;
         NearbyUnitCheck unitCheck { _player, perceptionRange };
-        Bcore::UnitListSearcher<NearbyUnitCheck> unitSearcher(_player, units, unitCheck);
+        Trinity::UnitListSearcher<NearbyUnitCheck> unitSearcher(_player, units, unitCheck);
         Cell::VisitAllObjects(_player, unitSearcher, perceptionRange);
 
         for (Unit* unit : units)
