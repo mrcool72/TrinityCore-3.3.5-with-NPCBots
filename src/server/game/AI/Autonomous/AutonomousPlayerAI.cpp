@@ -29,7 +29,7 @@ namespace AutonomousAI
         if (me && me->IsInWorld())
         {
             Unit* target = me->GetVictim();
-            if (!target || !CanAIAttack(target) || !target->IsInWorld() || target->IsDead())
+            if (!target || !CanAIAttack(target) || !target->IsInWorld() || !target->IsAlive())
                 target = SelectAttackTarget();
 
             if (target && CanAIAttack(target))
@@ -37,7 +37,7 @@ namespace AutonomousAI
                 if (IsRangedAttacker())
                 {
                     if (me->IsWithinLOSInMap(target))
-                        AttackStartCaster(target, CASTER_CHASE_DISTANCE);
+                        AttackStartCaster(target, 28.0f);
                     else
                         AttackStart(target);
                     DoRangedAttackIfReady();
