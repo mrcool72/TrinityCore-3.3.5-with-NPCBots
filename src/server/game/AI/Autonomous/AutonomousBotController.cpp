@@ -431,6 +431,73 @@ namespace AutonomousAI
             }
         };
 
+        // These local visitors intentionally avoid Trinity::UnitListSearcher /
+        // CreatureListSearcher / GameObjectListSearcher.  Some Windows builds of
+        // this older 3.3.5 tree do not instantiate the corresponding template
+        // Visit methods in the final worldserver link.
+        struct NearbyCreatureVisitor
+        {
+            Player const* player;
+            float range;
+            std::vector<Creature*>& result;
+
+            void Visit(CreatureMapType& map)
+            {
+                for (auto itr = map.begin(); itr != map.end(); ++itr)
+                {
+                    Creature* creature = itr->GetSource();
+                    if (creature && creature->InSamePhase(player) &&
+                        player->IsWithinDistInMap(creature, range))
+                        result.push_back(creature);
+                }
+            }
+
+            template <class T>
+            void Visit(GridRefManager<T>&) { }
+        };
+
+        struct NearbyGameObjectVisitor
+        {
+            Player const* player;
+            float range;
+            std::vector<GameObject*>& result;
+
+            void Visit(GameObjectMapType& map)
+            {
+                for (auto itr = map.begin(); itr != map.end(); ++itr)
+                {
+                    GameObject* gameObject = itr->GetSource();
+                    if (gameObject && gameObject->InSamePhase(player) &&
+                        player->IsWithinDistInMap(gameObject, range))
+                        result.push_back(gameObject);
+                }
+            }
+
+            template <class T>
+            void Visit(GridRefManager<T>&) { }
+        };
+
+        struct NearbyPlayerVisitor
+        {
+            Player const* player;
+            float range;
+            std::vector<Unit*>& result;
+
+            void Visit(PlayerMapType& map)
+            {
+                for (auto itr = map.begin(); itr != map.end(); ++itr)
+                {
+                    Player* other = itr->GetSource();
+                    if (other && other != player && other->InSamePhase(player) &&
+                        player->IsWithinDistInMap(other, range))
+                        result.push_back(other);
+                }
+            }
+
+            template <class T>
+            void Visit(GridRefManager<T>&) { }
+        };
+
         Position MakePosition(WorldObject const* object)
         {
             Position result;
@@ -761,9 +828,8 @@ namespace AutonomousAI
 
         float perceptionRange = _perception.inDungeon ? 120.0f : PERCEPTION_RANGE;
         std::vector<Creature*> creatures;
-        NearbyCreatureCheck creatureCheck { _player, perceptionRange };
-        Trinity::CreatureListSearcher<NearbyCreatureCheck> creatureSearcher(_player, creatures, creatureCheck);
-        Cell::VisitAllObjects(_player, creatureSearcher, perceptionRange);
+        NearbyCreatureVisitor creatureVisitor { _player, perceptionRange, creatures };
+        Cell::VisitAllObjects(_player, creatureVisitor, perceptionRange);
 
         std::set<uint32> nearbyQuestGiverEntries;
         for (Creature* creature : creatures)
@@ -778,9 +844,8 @@ namespace AutonomousAI
         }
 
         std::vector<GameObject*> gameObjects;
-        NearbyGameObjectCheck gameObjectCheck { _player, perceptionRange };
-        Trinity::GameObjectListSearcher<NearbyGameObjectCheck> gameObjectSearcher(_player, gameObjects, gameObjectCheck);
-        Cell::VisitAllObjects(_player, gameObjectSearcher, perceptionRange);
+        NearbyGameObjectVisitor gameObjectVisitor { _player, perceptionRange, gameObjects };
+        Cell::VisitAllObjects(_player, gameObjectVisitor, perceptionRange);
 
         for (GameObject* gameObject : gameObjects)
         {
@@ -789,9 +854,8 @@ namespace AutonomousAI
         }
 
         std::vector<Unit*> units;
-        NearbyUnitCheck unitCheck { _player, perceptionRange };
-        Trinity::UnitListSearcher<NearbyUnitCheck> unitSearcher(_player, units, unitCheck);
-        Cell::VisitAllObjects(_player, unitSearcher, perceptionRange);
+        NearbyPlayerVisitor playerVisitor { _player, perceptionRange, units };
+        Cell::VisitAllObjects(_player, playerVisitor, perceptionRange);
 
         for (Unit* unit : units)
         {
