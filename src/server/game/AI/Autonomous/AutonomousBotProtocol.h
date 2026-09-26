@@ -50,6 +50,11 @@ namespace AutonomousAI
         float y = 0.0f;
         float z = 0.0f;
         float orientation = 0.0f;
+
+        float GetPositionX() const { return x; }
+        float GetPositionY() const { return y; }
+        float GetPositionZ() const { return z; }
+        float GetOrientation() const { return orientation; }
     };
 
     struct Action
