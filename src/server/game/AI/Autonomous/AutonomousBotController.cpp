@@ -34,6 +34,7 @@
 #include "Creature.h"
 #include "GameObject.h"
 #include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
 #include "InstanceScript.h"
 #include "Loot.h"
 #include "Map.h"
