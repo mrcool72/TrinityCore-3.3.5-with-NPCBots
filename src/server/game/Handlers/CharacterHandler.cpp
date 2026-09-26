@@ -16,6 +16,7 @@
  */
 
 #include "WorldSession.h"
+#include "AutonomousHeadlessPlayer.h"
 #include "ArenaTeamMgr.h"
 #include "CalendarMgr.h"
 #include "CharacterCache.h"
@@ -2198,5 +2199,60 @@ void WorldSession::HandleOpeningCinematic(WorldPackets::Misc::OpeningCinematic& 
             _player->SendCinematicStart(classEntry->CinematicSequenceID);
         else if (ChrRacesEntry const* raceEntry = sChrRacesStore.LookupEntry(_player->GetRace()))
             _player->SendCinematicStart(raceEntry->CinematicSequenceID);
+    }
+}
+
+
+namespace AutonomousAI
+{
+    void LoadHeadlessPlayer(ObjectGuid guid, HeadlessPlayerCallback callback)
+    {
+        CharacterCacheEntry const* characterInfo = sCharacterCache->GetCharacterCacheByGuid(guid);
+        if (!characterInfo)
+        {
+            if (callback)
+                callback(nullptr, nullptr);
+            return;
+        }
+
+        auto* session = new WorldSession(characterInfo->AccountId, std::string("AutonomousAI"), nullptr,
+            SEC_PLAYER, 2, 0, Minutes(0), LOCALE_enUS, 0, false);
+
+        auto holder = std::make_shared<LoginQueryHolder>(characterInfo->AccountId, guid);
+        if (!holder->Initialize())
+        {
+            delete session;
+            if (callback)
+                callback(nullptr, nullptr);
+            return;
+        }
+
+        session->AddQueryHolderCallback(CharacterDatabase.DelayQueryHolder(holder))
+            .AfterComplete([session, callback](SQLQueryHolderBase const& queryHolder)
+        {
+            session->HandlePlayerLogin(static_cast<LoginQueryHolder const&>(queryHolder));
+
+            if (callback)
+            {
+                if (Player* player = session->GetPlayer())
+                    callback(player, session);
+                else
+                {
+                    callback(nullptr, nullptr);
+                    delete session;
+                }
+            }
+            else if (!session->GetPlayer())
+                delete session;
+        });
+    }
+
+    void UnloadHeadlessPlayer(WorldSession* session)
+    {
+        if (!session)
+            return;
+
+        session->LogoutPlayer(true);
+        delete session;
     }
 }
