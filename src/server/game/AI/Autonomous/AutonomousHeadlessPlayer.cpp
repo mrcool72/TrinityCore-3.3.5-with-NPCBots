@@ -7,6 +7,7 @@
 #include "ObjectMgr.h"
 #include "World.h"
 #include "Player.h"
+#include "MotionMaster.h"
 #include "WorldSession.h"
 
 namespace AutonomousAI
