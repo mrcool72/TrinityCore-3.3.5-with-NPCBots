@@ -21,7 +21,7 @@ class autonomousbot_commandscript : public CommandScript
 public:
     autonomousbot_commandscript() : CommandScript("autonomousbot_commandscript") { }
 
-    std::span<ChatCommandBuilder const> GetCommands() const override
+    ChatCommandTable GetCommands() const override
     {
         static ChatCommandTable botCommandTable =
         {
@@ -70,7 +70,7 @@ private:
 
         for (auto const& profile : profiles)
         {
-            Player* player = ObjectAccessor::FindPlayer(AutonomousMakeGuid(profile.guid));
+            Player* player = ObjectAccessor::FindPlayer(AutonomousAI::AutonomousMakeGuid(profile.guid));
             bool online = player != nullptr;
             bool attached = AutonomousAI::sAutonomousBotMgr.Find(profile.guid) != nullptr;
             bool headless = AutonomousAI::sAutonomousBotMgr.IsHeadless(profile.guid);
