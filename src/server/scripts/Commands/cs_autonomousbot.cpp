@@ -3,6 +3,7 @@
 #include "ChatCommand.h"
 #include "Player.h"
 #include "../../game/Server/WorldSession.h"
+#include "WorldSession.h"
 #include "ObjectAccessor.h"
 #include "RBAC.h"
 
