@@ -1,0 +1,38 @@
+name: Windows x64 Build
+
+on:
+  push:
+    branches: [ "autonomous-ai" ]
+  pull_request:
+    branches: [ "autonomous-ai" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64 `
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo `
+            -DBUILD_TESTING=OFF
+
+      - name: Build RelWithDebInfo
+        shell: pwsh
+        run: |
+          cmake --build build --config RelWithDebInfo --parallel 4
+
+      - name: Verify core binaries
+        shell: pwsh
+        run: |
+          if (!(Test-Path "build/bin/RelWithDebInfo/Worldserver.exe")) {
+            throw "Worldserver.exe was not produced."
+          }
+          if (!(Test-Path "build/bin/RelWithDebInfo/Authserver.exe")) {
+            throw "Authserver.exe was not produced."
+          }
