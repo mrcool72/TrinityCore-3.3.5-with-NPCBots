@@ -33,7 +33,7 @@ namespace AutonomousAI
             if (GameObject* object = ObjectAccessor::GetGameObject(*player, [&]() { ObjectGuid g; g.SetRawValue(perception.resourceCandidateGuid); return g; }()))
             {
                 _action.type = ActionType::MOVE_TO;
-                Position const& worldPosition = object->GetPosition();
+                auto const& worldPosition = object->GetPosition();
                 _action.destination.mapId = player->GetMapId();
                 _action.destination.x = worldPosition.GetPositionX();
                 _action.destination.y = worldPosition.GetPositionY();
