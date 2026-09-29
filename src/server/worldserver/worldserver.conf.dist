@@ -4468,7 +4468,7 @@ NpcBot.Limit.Raid    = 1
 #        Default:     1 - (Enabled)
 #                     0 - (Disabled, keep all spawned bots in world)
 
-NpcBot.HideSpawns = 1
+NpcBot.HideSpawns = 0
 
 #
 #    NpcBot.Cost.Hire
@@ -4774,7 +4774,7 @@ NpcBot.WanderingBots.Continents.Maps = 0,1,530,571
 #        Minimum:     0.0
 #        Maximum:   100.0
 
-NpcBot.WanderingBots.Continents.XPGain = 1.0
+NpcBot.WanderingBots.Continents.XPGain = 1
 
 #
 #    NpcBot.WanderingBots.KillReward.Money
@@ -4793,7 +4793,7 @@ NpcBot.WanderingBots.Continents.XPGain = 1.0
 
 NpcBot.WanderingBots.KillReward.Money       = 0
 NpcBot.WanderingBots.KillReward.ItemCount   = 0
-NpcBot.WanderingBots.KillReward.ItemQuality = 0
+NpcBot.WanderingBots.KillReward.ItemQuality = 3
 
 #
 #    NpcBot.WanderingBots.FreeLoot.Skinning
@@ -4893,7 +4893,7 @@ NpcBot.WanderingBots.Classes.Shaman.Enable            = 1
 NpcBot.WanderingBots.Classes.Mage.Enable              = 1
 NpcBot.WanderingBots.Classes.Warlock.Enable           = 1
 NpcBot.WanderingBots.Classes.Druid.Enable             = 1
-NpcBot.WanderingBots.Classes.Blademaster.Enable       = 1
+NpcBot.WanderingBots.Classes.Blademaster.Enable       = 0
 NpcBot.WanderingBots.Classes.ObsidianDestroyer.Enable = 1
 NpcBot.WanderingBots.Classes.Archmage.Enable          = 1
 NpcBot.WanderingBots.Classes.Dreadlord.Enable         = 1
