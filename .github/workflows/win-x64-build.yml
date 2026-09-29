@@ -4,102 +4,94 @@ on:
   push:
     branches:
       - 'npcbots_3.3.5'
-      - 'CI'
       - 'autonomous-ai'
   pull_request:
+    branches:
+      - 'npcbots_3.3.5'
+      - 'autonomous-ai'
 
 concurrency:
-  group: ${{ github.head_ref }} || concat(${{ github.ref }}, ${{ github.workflow }})
+  group: ${{ github.head_ref || github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      fail-fast: false
     env:
       CMAKE_BUILD_TYPE: RelWithDebInfo
-      MYSQL_ROOT_DIR: C:/Program Files/MySQL/MySQL Server 8.0
+      MYSQL_ROOT_DIR: C:/tools/mysql/current
       OPENSSL_ROOT_DIR: C:/libs/openssl
     steps:
-    - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
 
-    - name: Set reusable strings
-      id: strings
-      shell: bash
-      run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+      - name: Install MySQL 8.4.6 development files
+        shell: pwsh
+        run: |
+          choco install mysql --version=8.4.6 -y --no-progress --params="/installLocation:C:\tools /port:3307 /serviceName:TrinityBuildMySQL"
+          if (!(Test-Path "$env:MYSQL_ROOT_DIR\include\mysql.h")) { throw "MySQL headers were not found at $env:MYSQL_ROOT_DIR" }
+          if (!(Test-Path "$env:MYSQL_ROOT_DIR\lib\libmysql.lib")) { throw "MySQL library was not found at $env:MYSQL_ROOT_DIR" }
+          if (!(Test-Path "$env:MYSQL_ROOT_DIR\bin\libmysql.dll")) { throw "MySQL DLL was not found at $env:MYSQL_ROOT_DIR" }
 
-    - name: Get current OpenSSL version
-      id: openssl-info
-      run: |
-        $VersionsUrl = "https://api.github.com/repos/slproweb/opensslhashes/contents/win32_openssl_hashes.json"
-        $Headers = @{
-          Accept="application/vnd.github.raw+json"
-          Authorization="Bearer ${{ secrets.GITHUB_TOKEN }}"
-        }
-        $openSSL = (Invoke-RestMethod $VersionsUrl -Headers $Headers).files.PSObject.Properties |
-          Select-Object -ExpandProperty Value |
-          Where-Object { $_.arch -eq 'INTEL' } |
-          Where-Object { $_.bits -eq '64' } |
-          Where-Object { $_.light -eq $false } |
-          Where-Object { $_.installer  -eq 'exe' } |
-          Sort-Object -Descending @{ Expression = { [version]$_.basever } } |
-          Select-Object -First 1
-        [System.String]::Format("cache-key=openssl-{0}-win-{1}-{2}", $openSSL.basever, $openSSL.arch, $openSSL.bits) >> $env:GITHUB_OUTPUT
-        [System.String]::Format("url={0}", $openSSL.url) >> $env:GITHUB_OUTPUT
+      - name: Cache OpenSSL 3.6.2
+        id: cache-openssl
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.OPENSSL_ROOT_DIR }}
+          key: openssl-3.6.2-win64
 
-    - name: Cache OpenSSL
-      id: cache-openssl
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.OPENSSL_ROOT_DIR }}
-        key: ${{ steps.openssl-info.outputs.cache-key }}
+      - name: Install OpenSSL 3.6.2
+        if: steps.cache-openssl.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $url = "https://slproweb.com/download/Win64OpenSSL-3_6_2.exe"
+          $installer = "$env:TEMP\openssl-3.6.2.exe"
+          Invoke-WebRequest -Uri $url -OutFile $installer
+          $expected = "bdeaf4e8e7dc50d48cb340b180cb279354a05b3f8448136e6d6cc2ae17477515299b9d4bc4a16e41edf2a786f25c7cae039067b39094095117285565d0040dfb"
+          $actual = (Get-FileHash $installer -Algorithm SHA512).Hash.ToLower()
+          if ($actual -ne $expected) { throw "OpenSSL checksum mismatch." }
+          New-Item -ItemType Directory -Force -Path $env:OPENSSL_ROOT_DIR | Out-Null
+          Start-Process -Wait -FilePath $installer -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/SP-","/DIR=$env:OPENSSL_ROOT_DIR"
+          & "$env:OPENSSL_ROOT_DIR\bin\openssl.exe" version
 
-    - name: Download and install Openssl 3.x
-      if: ${{ steps.cache-openssl.outputs.cache-hit != 'true' }}
-      run: |
-        (New-Object System.Net.WebClient).DownloadFile("${{ steps.openssl-info.outputs.url }}", "${{ env.TEMP }}\openssl.exe")
-        Start-Process -Wait -FilePath "${{ env.TEMP }}\openssl.exe" "/SILENT","/SP-","/SUPPRESSMSGBOXES",/DIR=${{ env.OPENSSL_ROOT_DIR }}
+      - name: Install Boost 1.84.0 for MSVC 14.3
+        id: install-boost
+        uses: MarkusJx/install-boost@v2
+        with:
+          boost_version: 1.84.0
+          link: static
+          platform_version: 2022
+          toolset: msvc
 
-        # Quick Openssl install test
-        & ${{ env.OPENSSL_ROOT_DIR }}/bin/openssl.exe version
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v3
+        with:
+          msbuild-architecture: x64
 
-    - name: Download and install Boost
-      uses: MarkusJx/install-boost@v2
-      id: install-boost
-      with:
-        boost_version: 1.84.0
-        link: static
-        platform_version: 2022
-        toolset: msvc
+      - name: Configure CMake
+        shell: pwsh
+        env:
+          BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
+        run: |
+          cmake -S "${{ github.workspace }}" -B "${{ github.workspace }}\build" -G "Visual Studio 17 2022" -A x64 -DBOOST_ROOT="$env:BOOST_ROOT" -DMYSQL_ROOT_DIR="$env:MYSQL_ROOT_DIR" -DOPENSSL_ROOT_DIR="$env:OPENSSL_ROOT_DIR" -DWITH_WARNINGS_AS_ERRORS=ON -DTOOLS=ON -DBUILD_TESTING=OFF
 
-    - name: Initialize Visual Studio Environment
-      uses: egor-tensin/vs-shell@v2
-      with:
-        arch: x64
+      - name: Build
+        shell: pwsh
+        run: |
+          cmake --build "${{ github.workspace }}\build" --config "${{ env.CMAKE_BUILD_TYPE }}" --parallel
 
-    - name: Configure CMake
-      env:
-        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
-      run: >
-        cmake -GNinja -S ${{ github.workspace }} -B ${{ steps.strings.outputs.build-output-dir }}
-        -DWITH_WARNINGS_AS_ERRORS=ON -DTOOLS=ON
+      - name: Verify binaries
+        shell: pwsh
+        run: |
+          $bin = "${{ github.workspace }}\build\bin\${{ env.CMAKE_BUILD_TYPE }}"
+          if (!(Test-Path "$bin\worldserver.exe")) { throw "worldserver.exe was not produced." }
+          if (!(Test-Path "$bin\authserver.exe")) { throw "authserver.exe was not produced." }
+          & "$bin\worldserver.exe" --version
+          & "$bin\authserver.exe" --version
 
-    - name: Build
-      run: |
-        cmake --build ${{ steps.strings.outputs.build-output-dir }}
-
-    - name: Copy Dependencies
-      run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}/bin/${{ env.CMAKE_BUILD_TYPE }}
-        copy "${{ env.MYSQL_ROOT_DIR }}/lib/libmysql.dll" libmysql.dll
-        # mysql may depend on a different version of openssl so copy its dlls first (override later with openssl's own if same version)
-        Copy-Item -Path "${{ env.MYSQL_ROOT_DIR }}/bin/*" -Include libcrypto*,libssl* -Destination .
-        Copy-Item -Path "${{ env.OPENSSL_ROOT_DIR }}/bin/*" -Include libcrypto*,libssl*,legacy* -Destination .
-
-    - name: Check binaries
-      run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}/bin/${{ env.CMAKE_BUILD_TYPE }}
-        ./authserver --version
-        ./worldserver --version
+      - name: Copy runtime dependencies
+        shell: pwsh
+        run: |
+          $bin = "${{ github.workspace }}\build\bin\${{ env.CMAKE_BUILD_TYPE }}"
+          Copy-Item "$env:MYSQL_ROOT_DIR\bin\libmysql.dll" "$bin\libmysql.dll" -Force
+          Copy-Item "$env:OPENSSL_ROOT_DIR\bin\libcrypto-3-x64.dll" "$bin\" -Force
+          Copy-Item "$env:OPENSSL_ROOT_DIR\bin\libssl-3-x64.dll" "$bin\" -Force
